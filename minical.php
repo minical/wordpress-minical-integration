@@ -48,8 +48,8 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'PLUGIN_NAME_VERSION', '1.0.1' );
 define('STE_PLUGIN_DB_VERSION', '12');
 
-	define('MINICAL_API_URL', 'https://api.minical.io/v2');
-	define('MINICAL_APP_URL', 'https://iframe.minical.io');
+define('MINICAL_API_URL', 'https://demoapi.minical.io/v2');
+define('MINICAL_APP_URL', 'https://demo.minical.io');
 
 $x_api_key = get_option('minical_api_key');
 define('X_API_KEY', $x_api_key);

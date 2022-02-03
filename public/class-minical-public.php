@@ -102,9 +102,7 @@ class Minical_Public {
 		wp_enqueue_script( "bootstrap", plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( "jquery-ui", plugin_dir_url( __FILE__ ) . 'js/jquery-ui.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( "bootbox", plugin_dir_url( __FILE__ ) . 'js/bootbox.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'online-reservation', plugin_dir_url( __FILE__ ) . 'js/online-reservation.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'validation', plugin_dir_url( __FILE__ ) . 'js/cc-validation.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-public.js', array( 'jquery' ), time(), false );
 		?>
 		<script type="text/javascript">
 		    site_url = '<?php echo get_option('siteurl'); ?>';
@@ -164,9 +162,27 @@ class Minical_Public {
 		$baseUrl = MINICAL_API_URL;  
         $xApiKey = X_API_KEY;
 
-		$client = new ApiClientPublic($xApiKey, $baseUrl);               
-        $output = $client->sendRequest('/booking/booking_engine_charge_calculation', 'POST', $view_data);
-        $resp =  $output->data;
+        $output = wp_remote_post(
+			$baseUrl.'/booking/booking_engine_charge_calculation',
+			array(
+				'sslverify' => FALSE,
+				'method' => 'POST',
+				'timeout' => 45,
+				'redirection' => 5,
+				'httpversion' => '1.0',
+				'blocking' => true,
+				'headers' => array(
+					'Content-Type' => 'application/json',
+					'X-API-KEY' => $xApiKey
+					),
+				'cookies' => array(),
+				'body' => json_encode($view_data),
+			)
+		);
+
+        $result = json_decode(json_encode($output), true);
+        // echo '<pre>'; print_r($result); echo '</pre>'; die;
+		$resp = json_decode($result['body'], true);
 
         echo json_encode(array('result' => $resp), true);
         die;
@@ -219,7 +235,7 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        // echo '<pre>'; print_r($result); echo '</pre>'; die;
+        echo '<pre>'; print_r($result); echo '</pre>'; die;
 		$resp = json_decode($result['body'], true);
 
         echo json_encode(array('result' => $resp), true);

@@ -168,7 +168,7 @@ function check_room_type_availability()
 						if(value && value.images && value.images.length > 0) {
 							var j = 0;
 
-							if(j == 0){
+							if(j == 0 && value.images.length > 1){
 								sm_image_content += '<div class="rt-small-img">';
 							}
 							$.each(value.images, function(i, v) {
@@ -191,7 +191,7 @@ function check_room_type_availability()
 								}
 							});
 
-							if(j > 0) {
+							if(j > 0 && sm_image_content) {
 								sm_image_content += '</div>';
 							}
 						} else {
