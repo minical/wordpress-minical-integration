@@ -153,18 +153,44 @@
 
         $minical_company_id = get_option('minical_company_id'); 
 
-        if(empty($minical_company_id) && !empty($api_key)){
-            $baseUrl = BASE_URL;  
+        if(!empty($api_key)){
+            $baseUrl = MINICAL_API_URL;  
             $xApiKey = X_API_KEY;  
             $data = array('x_api_key' => $xApiKey);
-            $client = new ApiClient($xApiKey, $baseUrl);               
-            $output = $client->sendRequest('/company/get_company_id', 'POST', $data);
-            $company_id =  $output->data;
 
-            if(!empty($company_id))
-                add_option( 'minical_company_id', $company_id);
+            $output = wp_remote_post(
+                $baseUrl.'/company/get_company_id',
+                array(
+                    'sslverify' => FALSE,
+                    'method' => 'POST',
+                    'timeout' => 45,
+                    'redirection' => 5,
+                    'httpversion' => '1.0',
+                    'blocking' => true,
+                    'headers' => array(
+                        'Content-Type' => 'application/json',
+                        'X-API-KEY' => $xApiKey
+                        ),
+                    'cookies' => array(),
+                    'body' => json_encode($data),
+                )
+            );
+
+
+            // $client = new ApiClient($xApiKey, $baseUrl);               
+            // $output = $client->sendRequest('/company/get_company_id', 'POST', $data);
+            // $company_id =  $output->data;
+
+            $result = json_decode(json_encode($output), true);
+            $company_id = json_decode($result['body'], true);
 
             $minical_company_id = get_option('minical_company_id'); 
+
+            if(empty( $company_id )){
+                add_option( 'minical_company_id', $company_id);
+            } else {
+                update_option( 'minical_company_id', $company_id);
+            }
         }
 
 ?>

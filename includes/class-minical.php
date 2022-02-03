@@ -157,7 +157,8 @@ class Minical {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );		
 		/*hooks made by devloper*/
 		$this->loader->add_action( 'wp_ajax_update_minical_api_key', $plugin_admin, 'update_minical_api_key' );
-		// $this->loader->add_action( 'wp_ajax_update_form_builder_data', $plugin_admin, 'update_form_builder_data' );
+		$this->loader->add_action( 'wp_ajax_update_booking_engine_fields', $plugin_admin, 'update_booking_engine_fields' );
+		$this->loader->add_action( 'wp_ajax_update_booking_engine_settings', $plugin_admin, 'update_booking_engine_settings' );
 		// $this->loader->add_action( 'wp_ajax_get_edit_form_data', $plugin_admin, 'get_edit_form_data' );
 		// $this->loader->add_action( 'wp_ajax_delete_form_builder_data', $plugin_admin, 'delete_form_builder_data' );
 		// $this->loader->add_action( 'wp_ajax_set_email_draft', $plugin_admin, 'set_email_draft' );
@@ -191,6 +192,10 @@ class Minical {
 		$this->loader->add_action( 'wp_ajax_charge_calculation', $plugin_public, 'charge_calculation' );
 		$this->loader->add_action( 'wp_ajax_book_room', $plugin_public, 'book_room' );
 		$this->loader->add_action( 'wp_ajax_get_customer_info_form', $plugin_public, 'get_customer_info_form' );
+		$this->loader->add_action( 'wp_ajax_nopriv_check_room_type_availability', $plugin_public, 'check_room_type_availability' );
+		$this->loader->add_action( 'wp_ajax_nopriv_charge_calculation', $plugin_public, 'charge_calculation' );
+		$this->loader->add_action( 'wp_ajax_nopriv_book_room', $plugin_public, 'book_room' );
+		$this->loader->add_action( 'wp_ajax_nopriv_get_customer_info_form', $plugin_public, 'get_customer_info_form' );
 		// $this->loader->add_action( 'wp_ajax_nopriv_save_form_data', $plugin_public, 'save_form_data' );
 
 	}

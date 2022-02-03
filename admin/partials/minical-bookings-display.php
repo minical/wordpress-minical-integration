@@ -23,7 +23,7 @@ require_once('minical_account.php');
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 <?php 
-        $baseUrl = BASE_URL;  
+        $baseUrl = MINICAL_API_URL;  
         $xApiKey = X_API_KEY;  
         $data = array('company_id' => COMPANY_ID);
         $client = new ApiClient($xApiKey, $baseUrl);               

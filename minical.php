@@ -47,13 +47,39 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'PLUGIN_NAME_VERSION', '1.0.0' );
 define('STE_PLUGIN_DB_VERSION', '12');
-define('BASE_URL', 'http://seasonal.io/minical/app/api/v2');
+
+	define('MINICAL_API_URL', 'https://api.minical.io/v2');
+	define('MINICAL_APP_URL', 'https://app.minical.io');
 
 $x_api_key = get_option('minical_api_key');
 define('X_API_KEY', $x_api_key);
 
 $company_id = get_option('minical_company_id');
 define('COMPANY_ID', $company_id);
+
+define('BOOKING_FIELD_NAME', '-1');
+define('BOOKING_FIELD_EMAIL', '-2');
+define('BOOKING_FIELD_PHONE', '-3');
+define('BOOKING_FIELD_ADDRESS', '-4');
+define('BOOKING_FIELD_CITY', '-5');
+define('BOOKING_FIELD_REGION', '-6');
+define('BOOKING_FIELD_COUNTRY', '-7');
+define('BOOKING_FIELD_POSTAL_CODE', '-8');
+define('BOOKING_FIELD_SPECIAL_REQUEST', '-9');
+
+define('COMMON_BOOKING_ENGINE_FIELDS',
+        json_encode(array(
+            BOOKING_FIELD_NAME => 'Full Name',
+            BOOKING_FIELD_EMAIL => 'Email',
+            BOOKING_FIELD_PHONE => 'Phone',
+            BOOKING_FIELD_ADDRESS => 'Address',
+            BOOKING_FIELD_CITY => 'City',
+            BOOKING_FIELD_REGION => 'State Region/Province',
+            BOOKING_FIELD_COUNTRY => 'Country',
+            BOOKING_FIELD_POSTAL_CODE => 'Zip/Postal Code',
+            BOOKING_FIELD_SPECIAL_REQUEST => 'Special Requests'
+        ))
+    );
 
 /**
  * The code that runs during plugin activation.
@@ -95,8 +121,12 @@ function run_minical() {
 }
 run_minical();
 
-function minical_online_booking_engine( $atts ){
+function minical_online_booking_engine( $atts ) {
 	$html = '<style>
+
+			body {
+			    font-size: 15px !important;
+			}
 			#minical-select-dates-rooms {
 			    background: rgba(255,255,255,0.65);
 			    padding: 40px;
@@ -167,13 +197,24 @@ function minical_online_booking_engine( $atts ){
 			    color: #545454;
 			    margin-bottom: 10px;
 			}
-			#minical-show-reservations, #minical-book-reservation, #minical-booking-engine-thankyou{
+			#minical-show-reservations, #minical-book-reservation, #minical-booking-engine-thankyou {
 				max-width: 100% !important;
 				display: none;
 			}
-			.room-type-img{
-				max-width:200px !important;
-				height:200px !important;
+			.room-type-img {
+				max-width: 126px !important;
+				height: 126px !important;
+				margin-bottom: 0px !important;
+			}
+			.rt-small-img {
+				display: inline-flex;
+			}
+			
+			.room-type-small-img {
+				max-width: 63px !important;
+			    height: 65px !important;
+			    padding: 5px 0px;
+			    margin-bottom: -5px !important;
 			}
 			.panel {
 			    margin-bottom: 20px;
@@ -188,18 +229,26 @@ function minical_online_booking_engine( $atts ){
 			    box-shadow: 0px 0px 3px rgb(200 206 210 / 50%);
 			    border-color: #eaeaea;
 			}
-			.control-label{
+			.control-label {
 				text-align: center !important;
     			font-size: 15px !important;
 			}
-			.input-form-control{
+			.input-form-control {
 				padding: 6px 12px !important;
 				line-height: 1.42857143 !important;
 				color: #555 !important;
 				border: 1px solid #ccc !important;
 			    border-radius: 4px !important;
 			}
-			.thank_you_page{
+			.start_over {
+				padding: 5px 10px;
+    			text-decoration: none !important;
+			}
+			.btn-primary {
+			    color: #fff !important;
+			    background-color: #286090 !important;
+			}
+			.thank_you_page {
 				text-align: center;
     			font-size: 18px;
 			}
@@ -209,12 +258,15 @@ function minical_online_booking_engine( $atts ){
 	<ul>
 		<li>
 			<label for="check-in-date" >Check-in Date</label>
-			<input class="check-in-date" autocomplete="off" id="check_in_date" name="check-in-date" size="13" type="text" value="">
+			<input class="check-in-date" autocomplete="off" id="check_in_date" name="check-in-date" size="13" type="text" value="" placeholder="Enter Check-in date">
 		</li>
 		<li>
 			<label for="check-out-date" >Check-out Date</label>
-			<input class="check-out-date" autocomplete="off" id="check_out_date" name="check-out-date" size="13" type="text" value="">	</li>	<li>
-			<label id="adult_count" for="adult_count">Adults</label> <select name="adult_count" style="display:inline;">
+			<input class="check-out-date" autocomplete="off" id="check_out_date" name="check-out-date" size="13" type="text" value="" placeholder="Enter Check-out date">
+		</li>
+		<li>
+			<label id="adult_count" for="adult_count">Adults</label>
+			<select name="adult_count" style="display:inline;">
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
@@ -223,20 +275,21 @@ function minical_online_booking_engine( $atts ){
 				<option value="6">6</option>
 			</select>
 			
-			<label for="children_count" id="children_count">Children</label> <select name="children_count" style="display:inline;"> <option value="0">0</option>
+			<label for="children_count" id="children_count">Children</label> 
+			<select name="children_count" style="display:inline;"> <option value="0">0</option>
 				<option value="1">1</option>
 				<option value="2">2</option>
 				<option value="3">3</option>
 				<option value="4">4</option>
 			</select>			
-		</li>
-		 <li> <input name="number-of-rooms" value="1" hidden="hidden">
-		 <input type="button" name="submit" id="find_rooms" value="Find Rooms"> </li> </ul> </form></div>
+		</li></ul>
+		<input name="number-of-rooms" value="1" hidden="hidden">
+		 <input type="button" name="submit" id="find_rooms" value="Search"> </form></div>
 
 		';
 
 	$room_types_html .= '<div id="minical-show-reservations" class="" name="'.COMPANY_ID.'">
-							<div class="text-center"><h2>Rooms List</h2></div>
+							<div class=""><h2>Select your accommodation</h2></div>
 							<div class="col-md-12" id="minical-show-rooms">
 							</div>
 						</div>';
