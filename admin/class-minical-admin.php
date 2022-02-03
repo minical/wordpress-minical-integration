@@ -89,7 +89,7 @@ class Minical_Admin {
 		 
 		wp_enqueue_script( "jquery-1.12", plugin_dir_url( __FILE__ ) . 'js/jquery-1.12.4.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( "jquery-ui", plugin_dir_url( __FILE__ ) . 'js/jquery-ui.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-backend.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-backend.js', array( 'jquery' ), time(), false );
 		wp_enqueue_script( "minical-datatable", plugin_dir_url( __FILE__ ) . 'js/minical-datatable.min.js', array( 'jquery' ), '1.10.19', false );
 	}
 	
