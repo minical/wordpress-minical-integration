@@ -18,7 +18,7 @@ session_start();
  * Plugin Name:       Minical
  * Plugin URI:        https://minical.io
  * Description:       Minical is an opensource Property Management System (PMS) and Online Booking System for hotels.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            Mradul Jain
  * Author URI:        https://minical.io
  * License:           GPL-2.0+
@@ -45,7 +45,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.0' );
+define( 'PLUGIN_NAME_VERSION', '1.0.1' );
 define('STE_PLUGIN_DB_VERSION', '12');
 
 	define('MINICAL_API_URL', 'https://api.minical.io/v2');

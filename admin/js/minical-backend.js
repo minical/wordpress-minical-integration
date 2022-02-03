@@ -32,12 +32,8 @@ eventer(messageEvent,function(e) {
 	    console.log('current_url', data['minical-current-url']);
 
 	    var newURL = data['minical-current-url'];
-	    if(newURL.indexOf("localhost") ){
-	    	newURL = newURL.split('public');
-	    }
-	    else {
-	    	newURL = newURL.split('io');
-	    }
+	    
+    	newURL = newURL.split('io');
 	    
 	    console.log("URL NEW", newURL);
 	    newURL = '&minical-page='+newURL[1];
