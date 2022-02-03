@@ -149,14 +149,8 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        // print_r($result);
+        // echo '<pre>'; print_r($result); echo '</pre>'; die;
 		$resp = json_decode($result['body'], true);
-
-
-        // $client = new ApiClientPublic($xApiKey, $baseUrl);               
-        // $output = $client->sendRequest('/booking/check_room_type_availability', 'POST', $data);
-        
-        // $resp =  $output->data;
 
         echo json_encode(array('result' => $resp), true);
         die;

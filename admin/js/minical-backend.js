@@ -1,10 +1,10 @@
 $(document).ready(function(){
 
-    $(document).ready(function() {
-        $('#minical-rooms').DataTable();
-        $('#minical-room-types').DataTable();
-        $('#minical-bookings').DataTable();
-    } );
+    // $(document).ready(function() {
+    //     $('#minical-rooms').DataTable();
+    //     $('#minical-room-types').DataTable();
+    //     $('#minical-bookings').DataTable();
+    // } );
 
 $(document).on('click', '.update_minical_api_key', function (event) {
         update_minical_api_key();
@@ -26,6 +26,23 @@ eventer(messageEvent,function(e) {
 	    console.log('key', data['minical-api-key']);
 	    console.log('company', data['minical-company-id']);
 	    update_minical_api_key(data['minical-api-key'], data['minical-company-id']);
+	} 
+
+	if(data['minical-current-url']){
+	    console.log('current_url', data['minical-current-url']);
+
+	    var newURL = data['minical-current-url'];
+	    if(newURL.indexOf("localhost") ){
+	    	newURL = newURL.split('public');
+	    }
+	    else {
+	    	newURL = newURL.split('io');
+	    }
+	    
+	    console.log("URL NEW", newURL);
+	    newURL = '&minical-page='+newURL[1];
+	    
+	    changeurl(newURL, 'minical');
 	}
 },false);
 
@@ -88,24 +105,24 @@ function iframeURLChange(iframe, callback) {
 // Usage:
 
 $(document).ready(function(){
-	if(document.getElementById("minical-wp-iframe")) {
-		iframeURLChange(document.getElementById("minical-wp-iframe"), function (newURL) {
-		    console.log("URL changed:", newURL);
+	// if(document.getElementById("minical-wp-iframe")) {
+	// 	iframeURLChange(document.getElementById("minical-wp-iframe"), function (newURL) {
+	// 	    console.log("URL changed:", newURL);
 
-		    if(newURL.indexOf("localhost") ){
-		    	newURL = newURL.split('public');
-		    }
-		    else {
-		    	newURL = newURL.split('io');
-		    }
+	// 	    if(newURL.indexOf("localhost") ){
+	// 	    	newURL = newURL.split('public');
+	// 	    }
+	// 	    else {
+	// 	    	newURL = newURL.split('io');
+	// 	    }
 		    
-		    console.log("URL NEW", newURL);
-		    newURL = '&minical-page='+newURL[1];
+	// 	    console.log("URL NEW", newURL);
+	// 	    newURL = '&minical-page='+newURL[1];
 		    
-		    changeurl(newURL, 'minical');
+	// 	    changeurl(newURL, 'minical');
 
-		});
-	}
+	// 	});
+	// }
 
 	$('body').on('click', '.minical_auth', function(){
 		var buttonID = $(this).attr('id');
