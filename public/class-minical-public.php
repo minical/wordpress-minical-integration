@@ -241,7 +241,7 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        echo '<pre>'; print_r($result); echo '</pre>'; die;
+        // echo '<pre>'; print_r($result); echo '</pre>'; die;
 		$resp = json_decode($result['body'], true);
 
         echo json_encode(array('result' => $resp), true);
