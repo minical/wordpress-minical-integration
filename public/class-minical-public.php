@@ -114,19 +114,20 @@ class Minical_Public {
         $check_out_date = $_POST['end_date'];
         $adult_count = $_POST['adult_count'];
         $children_count = $_POST['children_count'];
+        $company_id = $_POST['company_id'];
+        $api_key = $_POST['api_key'];
         $is_ajax_wp = $_POST['is_ajax_wp'];
 
-        $baseUrl = MINICAL_API_URL;  
-        $xApiKey = X_API_KEY;  
+        $baseUrl = MINICAL_API_URL;
+        $xApiKey = $api_key;  
         $data = array(
-        	'company_id' => COMPANY_ID,
+        	'company_id' => $company_id,
         	'start_date' => $check_in_date,
         	'end_date' => $check_out_date,
         	'adult_count' => $adult_count,
         	'children_count' => $children_count,
         	'is_ajax_wp' => $is_ajax_wp
         );
-        // print_r($data);
 
         $output = wp_remote_post(
 			$baseUrl.'/booking/check_room_type_availability',
@@ -157,10 +158,13 @@ class Minical_Public {
 	function charge_calculation(){
 		$view_data['data'] = $_POST['view_data'];
 		$view_data['rate_plan_id'] = $_POST['rate_plan_id'];
-		$view_data['company_id'] = COMPANY_ID;
 
-		$baseUrl = MINICAL_API_URL;  
-        $xApiKey = X_API_KEY;
+		$company_id = $_POST['company_id'];
+        $api_key = $_POST['api_key'];
+		$view_data['company_id'] = $company_id;
+
+		$baseUrl = MINICAL_API_URL; 
+        $xApiKey = $api_key;
 
         $output = wp_remote_post(
 			$baseUrl.'/booking/booking_engine_charge_calculation',
@@ -190,13 +194,17 @@ class Minical_Public {
 
 	function book_room(){
 		$data['form_data'] = $_POST['form_data'];
-		$data['company_id'] = COMPANY_ID;
 		$data['rate_plan_id'] = $_POST['rate_plan_id'];
 		$data['view_data'] = $_POST['view_data'];
 		$data['company_data'] = $_POST['company_data'];
 		$data['average_daily_rate'] = $_POST['average_daily_rate'];
 
-		$get_booking_engine_settings = get_option('booking_engine_settings_'.COMPANY_ID);
+		$company_id = $_POST['company_id'];
+        $api_key = $_POST['api_key'];
+
+        $data['company_id'] = $company_id;
+
+		$get_booking_engine_settings = get_option('booking_engine_settings_'.$company_id);
     	$get_booking_engine_settings = json_decode($get_booking_engine_settings, true);
 
     	if(isset($get_booking_engine_settings['email_confirmation_for_booking_engine']) && $get_booking_engine_settings['email_confirmation_for_booking_engine']){
@@ -211,10 +219,8 @@ class Minical_Public {
     		$data['booking_engine_booking_status'] = false;
     	}
 
-    	
-
 		$baseUrl = MINICAL_API_URL;  
-        $xApiKey = X_API_KEY;
+        $xApiKey = $api_key;
 
         $output = wp_remote_post(
 			$baseUrl.'/booking/create_booking',
@@ -244,9 +250,11 @@ class Minical_Public {
 
 	function get_customer_info_form(){
 
-		$data['company_id'] = COMPANY_ID;
+		$company_id = $_POST['company_id'];
+        $api_key = $_POST['api_key'];
+		$data['company_id'] = $company_id;
 
-        $get_booking_engine_fields = get_option('booking_engine_fields_'.COMPANY_ID);
+        $get_booking_engine_fields = get_option('booking_engine_fields_'.$company_id);
         $get_booking_engine_fields = json_decode($get_booking_engine_fields, true);
 
         $common_booking_engine_fields = json_decode(COMMON_BOOKING_ENGINE_FIELDS, true);
@@ -268,7 +276,7 @@ class Minical_Public {
             $booking_engine_fields[] = array(
                 'id' => $id,
                 'field_name' => $name,
-                'company_id' => COMPANY_ID,
+                'company_id' => $company_id,
                 'show_on_booking_form'=> ($id == BOOKING_FIELD_NAME) ? 1 : (($get_common_booking_engine_fields && isset($get_common_booking_engine_fields[$id]) && isset($get_common_booking_engine_fields[$id]['show_on_booking_form'])) ? $get_common_booking_engine_fields[$id]['show_on_booking_form'] : 1),
                 'is_required' => $is_required
             );
@@ -362,7 +370,7 @@ class Minical_Public {
                 } 
             } 
 
-            $get_booking_engine_settings = get_option('booking_engine_settings_'.COMPANY_ID);
+            $get_booking_engine_settings = get_option('booking_engine_settings_'.$company_id);
         	$get_booking_engine_settings = json_decode($get_booking_engine_settings, true);
 
         	if(isset($get_booking_engine_settings['store_cc_in_booking_engine']) && $get_booking_engine_settings['store_cc_in_booking_engine']){

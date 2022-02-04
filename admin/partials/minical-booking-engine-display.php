@@ -94,7 +94,7 @@
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6">
-            <h2 class="text-center">Book Your Room</h2>
+            <h2 class="text-center">Minical Booking Engine Settings</h2>
         </div>
     </div>
 
@@ -107,7 +107,7 @@
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="booking-engine-shortcode" id="booking-engine-shortcode" autocomplete = "off" value="[minical-online-booking-engine]" readonly>
+                            <input type="text" class="form-control" name="booking-engine-shortcode" id="booking-engine-shortcode" autocomplete = "off" value="[minical-booking-form key='<?php echo X_API_KEY; ?>' id='<?php echo COMPANY_ID; ?>']" readonly>
                         </div>
                         <div class="booking_engine_shortocde_msg">
                             <strong>Use this shortcode on any page to accept bookings with Minical online booking engine.</strong>

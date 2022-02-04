@@ -48,8 +48,8 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'PLUGIN_NAME_VERSION', '1.0.1' );
 define('STE_PLUGIN_DB_VERSION', '12');
 
-define('MINICAL_API_URL', 'https://demoapi.minical.io/v2');
-define('MINICAL_APP_URL', 'https://demo.minical.io');
+	define('MINICAL_API_URL', 'https://demoapi.minical.io/v2');
+	define('MINICAL_APP_URL', 'https://demo.minical.io');
 
 $x_api_key = get_option('minical_api_key');
 define('X_API_KEY', $x_api_key);
@@ -254,7 +254,7 @@ function minical_online_booking_engine( $atts ) {
 			}
 			</style>';
 	
-	$html .= '<div id="minical-select-dates-rooms" class="column small-12 medium-8"  name="'.COMPANY_ID.'"><form action="" method="post" target="_blank" id="booking-form">
+	$html .= '<div id="minical-select-dates-rooms" class="column small-12 medium-8" data-company_id="'.$atts['id'].'" data-api_key="'.$atts['key'].'"><form action="" method="post" target="_blank" id="booking-form">
 	<ul>
 		<li>
 			<label for="check-in-date" >Check-in Date</label>
@@ -288,18 +288,18 @@ function minical_online_booking_engine( $atts ) {
 
 		';
 
-	$room_types_html .= '<div id="minical-show-reservations" class="" name="'.COMPANY_ID.'">
+	$room_types_html .= '<div id="minical-show-reservations" class="" name="'.$atts['id'].'">
 							<div class=""><h2>Select your accommodation</h2></div>
 							<div class="col-md-12" id="minical-show-rooms">
 							</div>
 						</div>';
 	
-	$user_info_html .= '<div id="minical-book-reservation" class="" name="'.COMPANY_ID.'">
+	$user_info_html .= '<div id="minical-book-reservation" class="" name="'.$atts['id'].'">
 							<div class="col-md-12" id="minical-book-room">
 							</div>
 						</div>';
 
-	$thank_you_page_html .= '<div id="minical-booking-engine-thankyou" class="" name="'.COMPANY_ID.'">
+	$thank_you_page_html .= '<div id="minical-booking-engine-thankyou" class="" name="'.$atts['id'].'">
 								<div class="col-md-12 thank_you_page" id="">
 									<h2 class="">Thank you for staying with us</h2>
 									<br />
@@ -310,6 +310,10 @@ function minical_online_booking_engine( $atts ) {
 
 	return $html.$room_types_html.$user_info_html.$thank_you_page_html; 
 }
-add_shortcode( 'minical-online-booking-engine', 'minical_online_booking_engine' );
+
+$shortcode = "minical-booking-form";
+
+// add_shortcode( 'minical-online-booking-engine', 'minical_online_booking_engine' );
+add_shortcode( $shortcode, 'minical_online_booking_engine' );
 
 ?>
