@@ -126,13 +126,13 @@
                                 <div class="panel-body">
                                     <ul class="bullet-points">
                                         <li>
-                                            Create <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates.
+                                            Create <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates.
                                         </li>
                                     <li>
-                                        Update your property information in <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/company/general'; ?>">Property Settings</a>
+                                        Update your property information in <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/company/general'; ?>">Property Settings</a>
                                     </li>
                                     <li>
-                                        Set the appropriate rooms in <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'.
+                                        Set the appropriate rooms in <a href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'.
                                     </li>
                                 </ul>
                               </div>

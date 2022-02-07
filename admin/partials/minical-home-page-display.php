@@ -91,13 +91,13 @@
                             With Minical
                         </li>
                         <li class="steps">
-                            Step 2:  Create <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates
+                            Step 2:  Create <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates
                         </li>
                         <li class="steps">
-                            Step 3:  Update your property information in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/company/general'; ?>">Property Settings</a>
+                            Step 3:  Update your property information in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/company/general'; ?>">Property Settings</a>
                         </li>
                         <li class="steps">
-                            Step 4:  Set the appropriate rooms in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'
+                            Step 4:  Set the appropriate rooms in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'
                         </li>
                         <li class="steps">
                             Step 5:  Update your <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=online-booking-engine'; ?>">Online booking engine settings</a>
@@ -129,9 +129,9 @@
                                 Signup / login
                             </a> 
                             with Minical</p>
-            <p><span>(2)</span>Create <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates</p>
-            <p><span>(3)</span>Update your property information in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/company/general'; ?>">Property Settings</a></p>
-            <p><span>(4)</span>Set the appropriate rooms in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-plugin&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'</p>
+            <p><span>(2)</span>Create <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/rates/rate_plans'; ?>">Rate Plans</a>, and set availability &amp; rates</p>
+            <p><span>(3)</span>Update your property information in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/company/general'; ?>">Property Settings</a></p>
+            <p><span>(4)</span>Set the appropriate rooms in <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=minical-app&minical-page=/settings/room_inventory/rooms'; ?>">Room Settings</a> to 'can be sold online'</p>
             <p><span>(5)</span>Update your <a target="_blank" href="<?php echo home_url() . '/wp-admin/admin.php?page=online-booking-engine'; ?>">Online booking engine settings</a></p>
             <p><span>(6)</span>Copy shortcode from booking engine settings and put on a page</p>
             <p><span>(7)</span>Test booking engine and start accepting bookings</p>
