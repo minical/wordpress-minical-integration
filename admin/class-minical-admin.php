@@ -110,24 +110,46 @@ class Minical_Admin {
 			'manage_options', 
 			'minical-plugin', 
 			array( 
+				$this, 'minical_home_page' 
+			) 
+		);
+
+		add_submenu_page(
+			'minical-plugin', 
+			'Minical App', 
+			'Minical App', 
+			'manage_options',
+			'minical-app',
+			array( 
 				$this, 'minical_page' 
+			) 
+		);
+
+		add_submenu_page(
+			'minical-plugin', 
+			'Online Booking Engine', 
+			'Online Booking Engine', 
+			'manage_options',
+			'online-booking-engine',
+			array( 
+				$this, 'show_online_booking_engine' 
 			) 
 		);
 
 		$minical_api_key = get_option('minical_api_key');
 
-		if($minical_api_key){
+		//if($minical_api_key){
 
-			add_submenu_page(
-				'minical-plugin', 
-				'Online Booking Engine', 
-				'Online Booking Engine', 
-				'manage_options',
-				'online-booking-engine',
-				array( 
-					$this, 'show_online_booking_engine' 
-				) 
-			);
+			// add_submenu_page(
+			// 	'minical-plugin', 
+			// 	'Online Booking Engine', 
+			// 	'Online Booking Engine', 
+			// 	'manage_options',
+			// 	'online-booking-engine',
+			// 	array( 
+			// 		$this, 'show_online_booking_engine' 
+			// 	) 
+			// );
 
 			// add_submenu_page(
 			// 	'minical-plugin', 
@@ -161,9 +183,13 @@ class Minical_Admin {
 			// 		$this, 'show_room_types' 
 			// 	) 
 			// );
-		}
+		//}
 	}
 	
+	function minical_home_page() {
+		require_once('partials/minical-home-page-display.php');
+	}
+
 	function minical_page() {
 		require_once('partials/minical-page-display.php');
 	}
