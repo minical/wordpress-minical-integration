@@ -1,3 +1,4 @@
+var $ = jQuery;
 $(document).ready(function(){
 
 	$(document).on('click', '#find_rooms', function (event) {
@@ -10,15 +11,6 @@ $(document).ready(function(){
 			$(this).val(ccMonth + ' / ');
 		}
 	});
-
-	// $(document).on('keyup', '#cc_number', function() {
-	// 	var ccNum = $.trim($(this).val());
-	// 	console.log('ccNum',ccNum);
-	// 	console.log('ccNumLen',ccNum.length);
-	// 	if(ccNum.length == 4 || ccNum.length == 9 || ccNum.length == 14) {
-	// 		$(this).val(ccNum + ' ');
-	// 	}
-	// });
 
 	$(document).on('blur', '#cc_number', function() {
 		var ccNum = $.trim($(this).val());
@@ -58,8 +50,6 @@ $( function() {
         $('#ui-datepicker-div').css('width','20%');
     });
 
-	// $('input[name=check-in-date]').val(checkInDate);
- //    $('input[name=check-out-date]').val(checkOutDate);
 
 	$("input[name=check-in-date]").datepicker({
 		minDate: 0,
@@ -106,209 +96,218 @@ function check_room_type_availability()
 	var company_id = $('#minical-select-dates-rooms').data('company_id');
 	var api_key = $('#minical-select-dates-rooms').data('api_key');
 
+	var validate = true;
+
 	if(check_in_date == ''){
 		alert('Please enter check-in date');
+		validate = false;
 		return false;
 	}
 	if(check_out_date == ''){
 		alert('Please enter check-out date');
+		validate = false;
 		return false;
 	}
 
-	$.ajax({
-		url:site_url+'/wp-admin/admin-ajax.php',
-		type:'post',
-		data:{
-				action: 'check_room_type_availability',
-				start_date : check_in_date,
-				end_date : check_out_date,
-				adult_count : adult_count,
-				children_count : children_count,
-				company_id : company_id,
-				api_key : api_key,
-				is_ajax_wp : true
-			},
-		dataType:'json',
-		success:function(response){
-			console.log('response', response);
-			if(response && response.result && response.result.status){
+	if(validate){
+		$('#find_rooms').prop('disabled', true);
+		$('#find_rooms').val('Processing. . .');
 
-				$('#minical-select-dates-rooms').fadeOut("300");
-				$('#minical-show-reservations').fadeIn("400");
+		$.ajax({
+			url:site_url+'/wp-admin/admin-ajax.php',
+			type:'post',
+			data:{
+					action: 'check_room_type_availability',
+					start_date : check_in_date,
+					end_date : check_out_date,
+					adult_count : adult_count,
+					children_count : children_count,
+					company_id : company_id,
+					api_key : api_key,
+					is_ajax_wp : true
+				},
+			dataType:'json',
+			success:function(response){
+				console.log('response', response);
+				if(response && response.result && response.result.status){
 
-				var html_content = '';
-				var daily_rate_content = '';
+					$('#minical-select-dates-rooms').fadeOut("300");
+					$('#minical-show-reservations').fadeIn("400");
 
-				var company_id = response.result.company_id;
-				company_data = response.result.data.company_data;
-				data = response.result.data.view_data;
-				var images = data.available_rate_plans.images;
-				
-				$.each(data.available_rate_plans, function(index, value) {
-
-					var is_room_type_unavailable = false;
-                	var is_room_bookable = true;
-                	var is_rooms_available = false;
-
-                	var rate_plan_id = value.rate_plan_id;
-					var rate_plan_selected_count = 0; 
-					var max_adult_content = '';
-					var btn_blocked = '';
-					var error_content = '';
-					var image_content = '';
-					var sm_image_content = '';
+					var html_content = '';
 					var daily_rate_content = '';
-					var description = '';
 
-					console.log('value',value);
+					var company_id = response.result.company_id;
+					company_data = response.result.data.company_data;
+					data = response.result.data.view_data;
+					var images = data.available_rate_plans.images;
+					
+					$.each(data.available_rate_plans, function(index, value) {
 
-					if(value.average_daily_rate != 0 || (company_data.allow_free_bookings != 0 || 
-						(!value.charge_type_id || value.charge_type_id == 0))){
-						is_rooms_available = true;
-					}
+						var is_room_type_unavailable = false;
+	                	var is_room_bookable = true;
+	                	var is_rooms_available = false;
 
-					if(is_rooms_available) {
+	                	var rate_plan_id = value.rate_plan_id;
+						var rate_plan_selected_count = 0; 
+						var max_adult_content = '';
+						var btn_blocked = '';
+						var error_content = '';
+						var image_content = '';
+						var sm_image_content = '';
+						var daily_rate_content = '';
+						var description = '';
 
-						if(value && value.images && value.images.length > 0) {
-							var j = 0;
+						console.log('value',value);
 
-							if(j == 0 && value.images.length > 1){
-								sm_image_content += '<div class="rt-small-img">';
-							}
-							$.each(value.images, function(i, v) {
-								if(i > 0) {
-									j++;
-								}
-								if(i == 0) {
-									image_content += '<a target="_blank" href="'+value.image_url+company_id+'/'+v.filename+'"'+
-														'data-lightbox="'+rate_plan_id+'" >'+
-														'<img class="room-type-img" src="'+value.image_url+company_id+'/'+v.filename+'" />'+
-													'</a>';
-								} else {
-									
-										sm_image_content += '<a class="img-anchor" target="_blank" href="'+value.image_url+company_id+'/'+v.filename+'"'+
-														'data-lightbox="'+rate_plan_id+'" >'+
-														'<img class="room-type-small-img" src="'+value.image_url+company_id+'/'+v.filename+'" />'+
-													'</a>';
-										
-									//}
-								}
-							});
-
-							if(j > 0 && sm_image_content) {
-								sm_image_content += '</div>';
-							}
-						} else {
-							image_content = '<div class="panel panel-default text-center">'+
-												'<div class="h4 text-muted">Photo not available</div>'+
-											'</div>';
+						if(value.average_daily_rate != 0 || (company_data.allow_free_bookings != 0 || 
+							(!value.charge_type_id || value.charge_type_id == 0))){
+							is_rooms_available = true;
 						}
 
-						image_content = image_content + sm_image_content;
+						if(is_rooms_available) {
 
-						if((value.max_adults).length > 0) {
-	                        for(var i = 0; i < value.max_adults; i++) {
-	                            max_adult_content += '<i class="fa fa-male" aria-hidden="true" style="margin-right: 3px;"></i>';
-	                        }
-	                    }
+							if(value && value.images && value.images.length > 0) {
+								var j = 0;
 
-	                    var average_daily_rate = (value.average_daily_rate).toFixed(2);
-	                    if (company_data.allow_free_bookings && average_daily_rate == 0){
-	                        // do not show rate if it's 0
-	                    } else { 
-	                    	daily_rate_content = 	'<div class="daily-rate" style="font-size: 32px;">'+
-	                            					average_daily_rate+
-	                            					'<span style="font-size: 16px;color: gray;padding-left: 3px;">'+value.currency_code+'</span>'+
-	                        					'</div>'+
-	                        					'<span style="color: gray;">Average rate per night</span>';
-	                    }
+								if(j == 0 && value.images.length > 1){
+									sm_image_content += '<div class="rt-small-img">';
+								}
+								$.each(value.images, function(i, v) {
+									if(i > 0) {
+										j++;
+									}
+									if(i == 0) {
+										image_content += '<a target="_blank" href="'+value.image_url+company_id+'/'+v.filename+'"'+
+															'data-lightbox="'+rate_plan_id+'" >'+
+															'<img class="room-type-img" src="'+value.image_url+company_id+'/'+v.filename+'" />'+
+														'</a>';
+									} else {
+											sm_image_content += (i % 2) != 0 ? '</div><div class="rt-small-img">' : '';
+											sm_image_content += '<a class="img-anchor" target="_blank" href="'+value.image_url+company_id+'/'+v.filename+'"'+
+															'data-lightbox="'+rate_plan_id+'" >'+
+															'<img class="room-type-small-img" src="'+value.image_url+company_id+'/'+v.filename+'" />'+
+														'</a>';
+											
+										
+									}
+								});
 
-	                    if(value.description != ''){
-	                    	description = value.description;
-	                    }
+								if(j > 0 && sm_image_content) {
+									sm_image_content += '</div>';
+								}
+							} else {
+								image_content = '<div class="panel panel-default text-center">'+
+													'<div class="h4 text-muted">Photo not available</div>'+
+												'</div>';
+							}
 
-	                    if(data && data.unavailable_room_types && data.unavailable_room_types.length > 0){
-		                    $.each(data.unavailable_room_types, function(i, v) {
-		                		if(v.id == value.room_type_id)
-		                		{
-		                			is_room_type_unavailable = true;
-		                            is_room_bookable = false;
-		                            error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">This room type is unavailable for the given dates</div>';
-		                			btn_blocked = 'disabled';
-		                		}
-		                    });
-		                }
+							image_content = image_content + sm_image_content;
+
+							if((value.max_adults).length > 0) {
+		                        for(var i = 0; i < value.max_adults; i++) {
+		                            max_adult_content += '<i class="fa fa-male" aria-hidden="true" style="margin-right: 3px;"></i>';
+		                        }
+		                    }
+
+		                    var average_daily_rate = (value.average_daily_rate).toFixed(2);
+		                    if (company_data.allow_free_bookings && average_daily_rate == 0){
+		                        // do not show rate if it's 0
+		                    } else { 
+		                    	daily_rate_content = 	'<div class="daily-rate" style="font-size: 32px;">'+
+		                            					average_daily_rate+
+		                            					'<span style="font-size: 16px;color: gray;padding-left: 3px;">'+value.currency_code+'</span>'+
+		                        					'</div>'+
+		                        					'<span style="color: gray;">Average rate per night</span>';
+		                    }
+
+		                    if(value.description != ''){
+		                    	description = value.description;
+		                    }
+
+		                    if(data && data.unavailable_room_types && data.unavailable_room_types.length > 0){
+			                    $.each(data.unavailable_room_types, function(i, v) {
+			                		if(v.id == value.room_type_id)
+			                		{
+			                			is_room_type_unavailable = true;
+			                            is_room_bookable = false;
+			                            error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">This room type is unavailable for the given dates</div>';
+			                			btn_blocked = 'disabled';
+			                		}
+			                    });
+			                }
 
 
-	                    if(value.min_length != undefined){
-	                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.min_length+'</div>';
-	                    	is_room_bookable = false;
-	                    	btn_blocked = 'disabled';
-	                    }
-	                    if(value.max_length != undefined){
-	                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.max_length+'</div>';
-	                    	is_room_bookable = false;
-	                    	btn_blocked = 'disabled';
-	                    }
-	                    if(value.arrival != undefined){
-	                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.arrival+'</div>';
-	                    	is_room_bookable = false;
-	                    	btn_blocked = 'disabled';
-	                    }
-	                    if(value.departure != undefined){
-	                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.departure+'</div>';
-	                    	is_room_bookable = false;
-	                    	btn_blocked = 'disabled';
-	                    }
+		                    if(value.min_length != undefined){
+		                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.min_length+'</div>';
+		                    	is_room_bookable = false;
+		                    	btn_blocked = 'disabled';
+		                    }
+		                    if(value.max_length != undefined){
+		                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.max_length+'</div>';
+		                    	is_room_bookable = false;
+		                    	btn_blocked = 'disabled';
+		                    }
+		                    if(value.arrival != undefined){
+		                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.arrival+'</div>';
+		                    	is_room_bookable = false;
+		                    	btn_blocked = 'disabled';
+		                    }
+		                    if(value.departure != undefined){
+		                    	error_content = '<div class="col-md-6" style="font-size: 14px;color: red;">'+value.departure+'</div>';
+		                    	is_room_bookable = false;
+		                    	btn_blocked = 'disabled';
+		                    }
 
-						html_content += '<div class="panel-rate-plan-listing panel panel-success">'+
-										'<div class="panel-body" style="padding: 0 !important;">'+
-											'<form action="" method="post">'+
-												'<input type="hidden" value="'+company_id+'" name="company-id">'+
-												'<input type="hidden" value="'+data.check_in_date+'" name="check-in-date">'+
-												'<input type="hidden" value="'+data.check_out_date+'" name="check-out-date">	'+		
-												'<input type="hidden" value="'+data.adult_count+'" name="adult_count">'+
-												'<input type="hidden" value="'+data.children_count+'" name="children_count">'+			
-												'<input type="hidden" value="'+rate_plan_id+'" name="rate-plan-selected-ids[]">'+
-												'<div class="col-md-2" style="padding: 0;">'+
-													image_content+
-												'</div>'+
-												'<div class="col-md-10">'+
-													'<div class="col-md-7">'+
-					                                    '<h3 class="panel-title">'+
-					                                        '<div class="h4" style="color: #145291; font-size: 22px; margin-top: 0;">'+value.room_type_name+'</div>'+
-					                                        '<div>'+value.rate_plan_name+'</div>'+
-					                                        '<div style="font-size: 12px; color: gray; margin-top: 15px;">'+
-					                                        	max_adult_content+
-					                                        '</div>'+
-					                                    '</h3>'+
-					                                    '<br/>'+
-					                                '</div>'+
-					                                '<div class="col-md-5" style="padding: 0;">'+
-					                                    '<div class="text-right" style="margin-bottom: 25px;padding: 0 20px;">'+
-					                                        daily_rate_content+
-					                                    '</div>'+
-					                                '</div>'+
-					                                '<div class="col-md-12" style="min-height: 123px;">'+
-					                                    description+
-					                                '</div>'+
-					                                
-					                            	error_content+
-					                            '</div>'+
-                        							'<input type="button" id="'+rate_plan_id+'" '+btn_blocked+' name="submit" value="Book" class="btn btn-primary btn-lg book_reservation" style="width: 140px;float: right;border-radius: 0;padding: 7px;font-size: 12px;" />'+
-					                        '</form>'+
-										'</div>'+
-									'</div>';
-					}
-				});
+							html_content += '<div class="panel-rate-plan-listing panel panel-success">'+
+											'<div class="panel-body" style="padding: 0 !important;">'+
+												'<form action="" method="post">'+
+													'<input type="hidden" value="'+company_id+'" name="company-id">'+
+													'<input type="hidden" value="'+data.check_in_date+'" name="check-in-date">'+
+													'<input type="hidden" value="'+data.check_out_date+'" name="check-out-date">	'+		
+													'<input type="hidden" value="'+data.adult_count+'" name="adult_count">'+
+													'<input type="hidden" value="'+data.children_count+'" name="children_count">'+			
+													'<input type="hidden" value="'+rate_plan_id+'" name="rate-plan-selected-ids[]">'+
+													'<div class="col-md-2" style="padding: 0;">'+
+														image_content+
+													'</div>'+
+													'<div class="col-md-10">'+
+														'<div class="col-md-7">'+
+						                                    '<h3 class="panel-title">'+
+						                                        '<div class="h4" style="color: #145291; font-size: 22px; margin-top: 0;">'+value.room_type_name+'</div>'+
+						                                        '<div>'+value.rate_plan_name+'</div>'+
+						                                        '<div style="font-size: 12px; color: gray; margin-top: 15px;">'+
+						                                        	max_adult_content+
+						                                        '</div>'+
+						                                    '</h3>'+
+						                                    '<br/>'+
+						                                '</div>'+
+						                                '<div class="col-md-5" style="padding: 0;">'+
+						                                    '<div class="text-right" style="margin-bottom: 25px;padding: 0 20px;">'+
+						                                        daily_rate_content+
+						                                    '</div>'+
+						                                '</div>'+
+						                                '<div class="col-md-12" style="min-height: 123px;">'+
+						                                    description+
+						                                '</div>'+
+						                                
+						                            	error_content+
+						                            '</div>'+
+	                        							'<input type="button" id="'+rate_plan_id+'" '+btn_blocked+' name="submit" value="Book" class="btn btn-primary btn-lg book_reservation" style="width: 140px;float: right;border-radius: 0;padding: 7px;font-size: 12px;" />'+
+						                        '</form>'+
+											'</div>'+
+										'</div>';
+						}
+					});
 
-						$('#minical-show-rooms').html(html_content);
+							$('#minical-show-rooms').html(html_content);
 
-			} else {
-				alert(response.result && response.result.msg);
+				} else {
+					alert(response.result && response.result.msg);
+				}
 			}
-		}
-    });
+	    });
+	}
 }
 
 $(document).on('click', '.book_reservation', function (event) {
@@ -407,8 +406,7 @@ $(document).on('click', '.book_reservation', function (event) {
 			},
 		dataType:'json',
 		success:function(resp){
-			// console.log('resp', resp);
-
+			
 			var result = resp.result.data.view_data;
 
 			if (company_data.allow_free_bookings && average_daily_rate == 0){

@@ -1,7 +1,4 @@
-<?php 
-
-// require_once('public/partials/stedb_form_builder_public.php');
-session_start();
+<?php
 /**
  * The plugin bootstrap file
  *
@@ -45,39 +42,45 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.0.1' );
-define('STE_PLUGIN_DB_VERSION', '12');
+define( 'MHBP_PLUGIN_NAME_VERSION', '1.0.1' );
+define( 'MHBP_STE_PLUGIN_DB_VERSION', '12' );
+ 
+// define( 'MHBP_MINICAL_API_URL', 'https://demoapi.minical.io/v2' );
+// define( 'MHBP_MINICAL_APP_URL', 'https://demo.minical.io' );
 
-	define('MINICAL_API_URL', 'https://demoapi.minical.io/v2');
-	define('MINICAL_APP_URL', 'https://demo.minical.io');
+//define( 'MHBP_MINICAL_API_URL', 'http://localhost/minical/api/v2' );
+//define( 'MHBP_MINICAL_APP_URL', 'http://localhost/minical/public' );
 
-$x_api_key = get_option('minical_api_key');
-define('X_API_KEY', $x_api_key);
+define( 'MHBP_MINICAL_API_URL', 'https://api.minical.io/v2' );
+define( 'MHBP_MINICAL_APP_URL', 'https://app.minical.io' );
 
-$company_id = get_option('minical_company_id');
-define('COMPANY_ID', $company_id);
+$x_api_key = sanitize_key( get_option('minical_api_key') );
+define( 'MHBP_X_API_KEY', $x_api_key );
 
-define('BOOKING_FIELD_NAME', '-1');
-define('BOOKING_FIELD_EMAIL', '-2');
-define('BOOKING_FIELD_PHONE', '-3');
-define('BOOKING_FIELD_ADDRESS', '-4');
-define('BOOKING_FIELD_CITY', '-5');
-define('BOOKING_FIELD_REGION', '-6');
-define('BOOKING_FIELD_COUNTRY', '-7');
-define('BOOKING_FIELD_POSTAL_CODE', '-8');
-define('BOOKING_FIELD_SPECIAL_REQUEST', '-9');
+$company_id = intval( get_option('minical_company_id') );
+define('MHBP_COMPANY_ID', $company_id);
 
-define('COMMON_BOOKING_ENGINE_FIELDS',
+define( 'MHBP_BOOKING_FIELD_NAME', '-1' );
+define( 'MHBP_BOOKING_FIELD_EMAIL', '-2' );
+define( 'MHBP_BOOKING_FIELD_PHONE', '-3' );
+define( 'MHBP_BOOKING_FIELD_ADDRESS', '-4' );
+define( 'MHBP_BOOKING_FIELD_CITY', '-5' );
+define( 'MHBP_BOOKING_FIELD_REGION', '-6' );
+define( 'MHBP_BOOKING_FIELD_COUNTRY', '-7' );
+define( 'MHBP_BOOKING_FIELD_POSTAL_CODE', '-8' );
+define( 'MHBP_BOOKING_FIELD_SPECIAL_REQUEST', '-9' );
+
+define( 'MHBP_COMMON_BOOKING_ENGINE_FIELDS',
         json_encode(array(
-            BOOKING_FIELD_NAME => 'Full Name',
-            BOOKING_FIELD_EMAIL => 'Email',
-            BOOKING_FIELD_PHONE => 'Phone',
-            BOOKING_FIELD_ADDRESS => 'Address',
-            BOOKING_FIELD_CITY => 'City',
-            BOOKING_FIELD_REGION => 'State Region/Province',
-            BOOKING_FIELD_COUNTRY => 'Country',
-            BOOKING_FIELD_POSTAL_CODE => 'Zip/Postal Code',
-            BOOKING_FIELD_SPECIAL_REQUEST => 'Special Requests'
+            MHBP_BOOKING_FIELD_NAME => 'Full Name',
+            MHBP_BOOKING_FIELD_EMAIL => 'Email',
+            MHBP_BOOKING_FIELD_PHONE => 'Phone',
+            MHBP_BOOKING_FIELD_ADDRESS => 'Address',
+            MHBP_BOOKING_FIELD_CITY => 'City',
+            MHBP_BOOKING_FIELD_REGION => 'State Region/Province',
+            MHBP_BOOKING_FIELD_COUNTRY => 'Country',
+            MHBP_BOOKING_FIELD_POSTAL_CODE => 'Zip/Postal Code',
+            MHBP_BOOKING_FIELD_SPECIAL_REQUEST => 'Special Requests'
         ))
     );
 
@@ -85,25 +88,29 @@ define('COMMON_BOOKING_ENGINE_FIELDS',
  * The code that runs during plugin activation.
  * This action is documented in includes/class-form-builder-form-activator.php
  */
-function activate_minical() {
+function mhbp_activate_minical() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-minical-activator.php';
-	Minical_Activator::activate();
+	MHBP_Minical_Activator::activate();
 }
+
 /**
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-form-builder-form-deactivator.php
  */
-function deactivate_minical() {
+function mhbp_deactivate_minical() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/class-minical-deactivator.php';
-	Minical_Deactivator::deactivate();
+	MHBP_Minical_Deactivator::deactivate();
 }
-register_activation_hook( __FILE__, 'activate_minical' );
-register_deactivation_hook( __FILE__, 'deactivate_minical' );
+
+register_activation_hook( __FILE__, 'mhbp_activate_minical' );
+register_deactivation_hook( __FILE__, 'mhbp_deactivate_minical' );
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-minical.php';
+
 /**
  * Begins execution of the plugin.
  *
@@ -113,15 +120,18 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-minical.php';
  *
  * @since    1.0.0
  */
-function run_minical() {
-    $plugin = new Minical();
+function mhbp_run_minical() {
+    $plugin = new MHBP_Minical();
 	$plugin->run();
 
 
 }
-run_minical();
+mhbp_run_minical();
 
-function minical_online_booking_engine( $atts ) {
+function mhbp_minical_online_booking_engine( $atts ) {
+	$room_types_html = '';
+	$user_info_html = '';
+	$thank_you_page_html = '';
 	$html = '<style>
 
 			body {
@@ -166,7 +176,7 @@ function minical_online_booking_engine( $atts ) {
 			    color: #545454;
 			}
 			#minical-select-dates-rooms #booking-form input[type="button"] {
-			    background: #3c89c2 !important;
+			    background: #fea116 !important;
 			    line-height: 0px;
 			    color: #fff !important;
 			    font-size: 15px;
@@ -208,6 +218,7 @@ function minical_online_booking_engine( $atts ) {
 			}
 			.rt-small-img {
 				display: inline-flex;
+				padding: 0px 1px;
 			}
 			
 			.room-type-small-img {
@@ -252,6 +263,9 @@ function minical_online_booking_engine( $atts ) {
 				text-align: center;
     			font-size: 18px;
 			}
+			#minical-show-rooms{
+				padding-top: 20px;
+		    }
 			</style>';
 	
 	$html .= '<div id="minical-select-dates-rooms" class="column small-12 medium-8" data-company_id="'.$atts['id'].'" data-api_key="'.$atts['key'].'"><form action="" method="post" target="_blank" id="booking-form">
@@ -313,7 +327,6 @@ function minical_online_booking_engine( $atts ) {
 
 $shortcode = "minical-booking-form";
 
-// add_shortcode( 'minical-online-booking-engine', 'minical_online_booking_engine' );
-add_shortcode( $shortcode, 'minical_online_booking_engine' );
+add_shortcode( $shortcode, 'mhbp_minical_online_booking_engine' );
 
 ?>

@@ -23,7 +23,7 @@
  * @subpackage Minical/includes
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical_i18n {
+class MHBP_Minical_i18n {
 
 
 	/**

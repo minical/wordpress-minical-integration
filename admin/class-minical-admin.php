@@ -1,5 +1,4 @@
 <?php
-//include(get_site_url().'/wp_load.php');
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -19,7 +18,7 @@
  * @subpackage Minical/admin
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical_Admin {
+class MHBP_Minical_Admin {
     /**
 	 * The ID of this plugin.
 	 *
@@ -52,7 +51,7 @@ class Minical_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function mhbp_admin_enqueue_styles($hook_suffix) {
         /**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -64,17 +63,20 @@ class Minical_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+        if(($hook_suffix != 'toplevel_page_minical-plugin') && ($hook_suffix != 'minical_page_online-booking-engine') && ($hook_suffix != 'minical_page_minical-app')) {
+        	return;
+        }
         wp_enqueue_style( "bootstrap", plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( "font-awesome-min", plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css', array(), $this->version, 'all' );
-		wp_enqueue_style( "jquery-ui", plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css', array(), $this->version, 'all' );
 		wp_enqueue_style( "minical-datatable", plugin_dir_url( __FILE__ ) . 'css/minical-datatable.min.css', array(), '1.10.19', 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/minical-admin-page.css', array(), $this->version, 'all' );
     }
     /**
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function mhbp_admin_enqueue_scripts($hook_suffix) {
         /**
 		 * This function is provided for demonstration purposes only.
 		 *
@@ -86,23 +88,18 @@ class Minical_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		 
-		wp_enqueue_script( "jquery-1.12", plugin_dir_url( __FILE__ ) . 'js/jquery-1.12.4.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( "jquery-ui", plugin_dir_url( __FILE__ ) . 'js/jquery-ui.min.js', array( 'jquery' ), $this->version, false );
+		if(($hook_suffix != 'toplevel_page_minical-plugin') && ($hook_suffix != 'minical_page_online-booking-engine') && ($hook_suffix != 'minical_page_minical-app')) {
+        	return;
+        } 
+        
+        wp_enqueue_script('jquery');
+		wp_enqueue_script( "bootstrap", plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-backend.js', array( 'jquery' ), time(), false );
-		wp_enqueue_script( "minical-datatable", plugin_dir_url( __FILE__ ) . 'js/minical-datatable.min.js', array( 'jquery' ), '1.10.19', false );
+		wp_enqueue_script( "minical-datatable", plugin_dir_url( __FILE__ ) . 'js/minical-datatable.min.js', array( 'jquery' ), '1.10.19', false );                                              
 	}
 	
-    function minical_setup_menu() {
-		// add_menu_page(
-		// 	'minicalplugin', 
-		// 	'Minical', 
-		// 	'manage_options', 
-		// 	'minical-plugin', 
-		// 	array( 
-		// 		$this, 'minical_settings' 
-		// 	) 
-		// );
+    function mhbp_minical_setup_menu() {
+		
 
 		add_menu_page(
 			'minicalplugin', 
@@ -110,10 +107,10 @@ class Minical_Admin {
 			'manage_options', 
 			'minical-plugin', 
 			array( 
-				$this, 'minical_home_page' 
+				$this, 'mhbp_minical_home_page' 
 			) 
 		);
-
+		
 		add_submenu_page(
 			'minical-plugin', 
 			'Minical App', 
@@ -121,7 +118,7 @@ class Minical_Admin {
 			'manage_options',
 			'minical-app',
 			array( 
-				$this, 'minical_page' 
+				$this, 'mhbp_minical_page' 
 			) 
 		);
 
@@ -132,117 +129,97 @@ class Minical_Admin {
 			'manage_options',
 			'online-booking-engine',
 			array( 
-				$this, 'show_online_booking_engine' 
+				$this, 'mhbp_show_online_booking_engine' 
 			) 
 		);
 
-		$minical_api_key = get_option('minical_api_key');
-
-		//if($minical_api_key){
-
-			// add_submenu_page(
-			// 	'minical-plugin', 
-			// 	'Online Booking Engine', 
-			// 	'Online Booking Engine', 
-			// 	'manage_options',
-			// 	'online-booking-engine',
-			// 	array( 
-			// 		$this, 'show_online_booking_engine' 
-			// 	) 
-			// );
-
-			// add_submenu_page(
-			// 	'minical-plugin', 
-			// 	'Bookings', 
-			// 	'Bookings', 
-			// 	'manage_options',
-			// 	'bookings',
-			// 	array( 
-			// 		$this, 'show_bookings' 
-			// 	) 
-			// );
-
-			// add_submenu_page(
-			// 	'minical-plugin', 
-			// 	'Rooms', 
-			// 	'Rooms', 
-			// 	'manage_options',
-			// 	'rooms',
-			// 	array( 
-			// 		$this, 'show_rooms' 
-			// 	) 
-			// );
-
-			// add_submenu_page(
-			// 	'minical-plugin', 
-			// 	'Room Types', 
-			// 	'Room Types', 
-			// 	'manage_options',
-			// 	'room-types',
-			// 	array( 
-			// 		$this, 'show_room_types' 
-			// 	) 
-			// );
-		//}
+		$minical_api_key = sanitize_key( get_option('minical_api_key') );
+		
 	}
 	
-	function minical_home_page() {
+	function mhbp_minical_home_page() {
 		require_once('partials/minical-home-page-display.php');
 	}
 
-	function minical_page() {
-		require_once('partials/minical-page-display.php');
+	function mhbp_minical_page() {
+		require_once('partials/minical-admin-display.php');	
 	}
 
-	function minical_settings() {
-		require_once('partials/minical-admin-display.php');
-	}
-
-	function show_bookings() {
-		require_once('partials/minical-bookings-display.php');
-	}
-
-	function show_rooms() {
-		require_once('partials/minical-rooms-display.php');
-	}
-
-	function show_room_types() {
-		require_once('partials/minical-room-types-display.php');
-	}
-
-	function show_online_booking_engine() {
+	function mhbp_show_online_booking_engine() {
 		require_once('partials/minical-booking-engine-display.php');
 	}
 
-	function update_minical_api_key() {
+	function mhbp_update_minical_api_key() {
 		
-		$api_key = get_option('minical_api_key');
-		$company_id = get_option('minical_company_id');
+		$minical_api_key = sanitize_key( $_POST['api_key'] );
+	
+        $is_valid_creds = false;
+		
+         if(!empty($minical_api_key)){
+            $baseUrl = MHBP_MINICAL_API_URL;    
+            $data = array('x_api_key' => $minical_api_key);
 
-		$minical_api_key = $_POST['api_key'];
-		$minical_company_id = $_POST['company_id'];
+            $output = wp_remote_post(
+                esc_url_raw( $baseUrl.'/company/get_company_id' ),
+                array(
+                    'sslverify' => FALSE,
+                    'method' => 'POST',
+                    'timeout' => 45,
+                    'redirection' => 5,
+                    'httpversion' => '1.0',
+                    'blocking' => true,
+                    'headers' => array(
+                        'Content-Type' => 'application/json',
+                        'X-API-KEY' => $minical_api_key
+                        ),
+                    'cookies' => array(),
+                    'body' => json_encode($data),
+                )
+            );
 
-		if(empty( $api_key )){
-			add_option( 'minical_api_key', $minical_api_key);
+            $result = json_decode(json_encode($output), true);
+            $company_data = json_decode($result['body'], true);
+           
+            if(isset($company_data['error']) && $company_data['error']){
+              $is_valid_creds = false; 
+            } else {
+            	update_option( 'minical_api_key', $minical_api_key);
+                update_option( 'minical_company_id', $company_data['company_id']);
+                update_option( 'minical_company_name', $company_data['company_name']);
+                $is_valid_creds = true;
+            }        
+        }
+	
+		if($is_valid_creds){
+			$msg = esc_html( 'Successfully added API key and company id' ); 
+			$result = array('success' => true, 'msg' => $msg);
+	     	return wp_send_json_success($result);
+	     	
 		} else {
-			update_option( 'minical_api_key', $minical_api_key);
+			$msg = esc_html( 'Please enter a valid API key' );
+			$result = array('success' => false, 'msg' => $msg);
+	        return wp_send_json_success($result);	
 		}
-
-		if($company_id){
-			update_option( 'minical_company_id', $minical_company_id);
-		} else {
-			add_option( 'minical_company_id', $minical_company_id);
-		}
-
-		echo json_encode(array('success' => true));
-		die;
+		
 	}
 
-	function update_booking_engine_fields(){
+    function mhbp_deconfigure_minical(){
+	    $minical_company_id = sanitize_key( $_POST['company_id'] );
+	    if($minical_company_id){
+	    	delete_option( 'minical_api_key' );
+            delete_option( 'minical_company_id' );
+            delete_option( 'minical_company_name' );
 
-		$updated_booking_engine_fields = $_POST['updated_booking_engine_fields'];
+	    }
+	    $result = array('success' => true);
+	     return wp_send_json_success($result);
+    }
+
+	function mhbp_update_booking_engine_fields(){
+
+		$updated_booking_engine_fields = sanitize_option( 'updated_booking_engine_fields', $_POST['updated_booking_engine_fields'] );
 		
-		$common_booking_engine_fields = json_decode(COMMON_BOOKING_ENGINE_FIELDS, true);
+		$common_booking_engine_fields = json_decode(MHBP_COMMON_BOOKING_ENGINE_FIELDS, true);
 
 		$fields_data = array();
 		foreach($updated_booking_engine_fields as $updated_booking_field)
@@ -253,7 +230,7 @@ class Minical_Admin {
             {
                 $fields_data[$booking_engine_field_id] = array(
                     'id' => $booking_engine_field_id,
-                    'company_id' => COMPANY_ID,
+                    'company_id' => MHBP_COMPANY_ID,
                     'show_on_booking_form' => $updated_booking_field['show_on_booking_form'],
                     'is_required' => $updated_booking_field['is_required']
                 );
@@ -262,33 +239,33 @@ class Minical_Admin {
 
         $fields_data = json_encode($fields_data);
 
-        update_option('booking_engine_fields_'.COMPANY_ID, $fields_data);
+        update_option('booking_engine_fields_'.MHBP_COMPANY_ID, $fields_data);
 
-        $booking_engine_fields = get_option('booking_engine_fields_'.COMPANY_ID);
+        $booking_engine_fields = sanitize_option( 'booking_engine_fields_', get_option('booking_engine_fields_'.MHBP_COMPANY_ID) );
         $booking_engine_fields = json_decode($booking_engine_fields, true);
 
-        echo json_encode(array('success' => true, 'result' => $booking_engine_fields), true);
-        die;
+        $result = array('success' => true, 'result' => $booking_engine_fields);
+	     return wp_send_json_success($result);
 	}
 
-	function update_booking_engine_settings(){
+	function mhbp_update_booking_engine_settings(){
 		$company_data = array(
-            'allow_same_day_check_in'               => $_POST['allow_same_day_check_in'],
-            'store_cc_in_booking_engine'            => $_POST['store_cc_in_booking_engine'],
-            'booking_engine_booking_status'         => $_POST['booking_engine_booking_status'],
-            'email_confirmation_for_booking_engine' => $_POST['email_confirmation_for_booking_engine'],
+            'allow_same_day_check_in'               => sanitize_option( 'allow_same_day_check_in', $_POST['allow_same_day_check_in'] ),
+            'store_cc_in_booking_engine'            => sanitize_option( 'store_cc_in_booking_engine', $_POST['store_cc_in_booking_engine'] ),
+            'booking_engine_booking_status'         => sanitize_option( 'booking_engine_booking_status', $_POST['booking_engine_booking_status'] ),
+            'email_confirmation_for_booking_engine' => sanitize_option( 'email_confirmation_for_booking_engine', $_POST['email_confirmation_for_booking_engine'] ),
             'booking_engine_tracking_code'          => htmlentities($_POST['booking_engine_tracking_code'])
         );
 
         $setting_data = json_encode($company_data);
 
-        update_option('booking_engine_settings_'.COMPANY_ID, $setting_data);
+        update_option('booking_engine_settings_'.MHBP_COMPANY_ID, $setting_data);
 
-        $booking_engine_settings = get_option('booking_engine_settings_'.COMPANY_ID);
+        $booking_engine_settings = sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.MHBP_COMPANY_ID) );
         $booking_engine_settings = json_decode($booking_engine_settings, true);
 
-        echo json_encode(array('success' => true, 'result' => $booking_engine_settings), true);
-        die;
+        $result = array('success' => true, 'result' => $booking_engine_settings);
+	    return wp_send_json_success($result);
 	}
 }
 

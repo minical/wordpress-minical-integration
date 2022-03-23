@@ -20,7 +20,7 @@
  * @subpackage Minical/includes
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical_Loader {
+class MHBP_Minical_Loader {
 
 	/**
 	 * The array of actions registered with WordPress.

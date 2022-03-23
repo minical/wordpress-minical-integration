@@ -19,7 +19,7 @@
  * @subpackage Minical/includes
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical_Deactivator {
+class MHBP_Minical_Deactivator {
 
 	/**
 	 * Short Description. (use period)

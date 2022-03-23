@@ -2,7 +2,7 @@ var innGrid = innGrid || {};
 var soldOutDates = [];
 var temp = 0;
 var fetchDatesStatus = '';
-
+var $ = jQuery;
 $(function() {
     $('#policy_modal').on('shown.bs.modal', function() {})
 

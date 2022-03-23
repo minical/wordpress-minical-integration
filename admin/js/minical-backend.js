@@ -1,47 +1,42 @@
+var $ = jQuery;
+
 $(document).ready(function(){
 
-    // $(document).ready(function() {
-    //     $('#minical-rooms').DataTable();
-    //     $('#minical-room-types').DataTable();
-    //     $('#minical-bookings').DataTable();
-    // } );
-
 $(document).on('click', '.update_minical_api_key', function (event) {
-        update_minical_api_key();
+	var api_key = $('input[name="minical_api_key"]').val();
+	if( $('input[name="minical_api_key"]').val() == ""){
+        alert('Please enter a Minical API key ');
+        return false;
+    }
+        update_minical_api_key(api_key,null);
     });
+$(document).on('click', '.disconnect_minical', function (event) {
+   var company_id = $(this).attr('data-company-id');
+   
+	$.ajax({
+		    beforeSend: function(request) {
+            if (!confirm('Are you sure, Disconnect with Minical !', true)) {
+                return false;
+            }
+            },
+			url:site_url+'/wp-admin/admin-ajax.php',
+			type:'post',
+			data:{
+				action: 'deconfigure_minical', 
+				company_id : company_id
+			},
+			dataType:'json',
+			success:function(response){
+				console.log(response);
+				if(response.success){
+					location.reload();
+			    }
+			}
+	    });
+ });
+
+
 });
-
-
-// Add an event listener for minical_login
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-
-// Listen to message from child window
-eventer(messageEvent,function(e) {
-    var key = e.message ? "message" : "data";
-    var data = e[key];
-
-    if(data['minical-api-key']){
-	    console.log('key', data['minical-api-key']);
-	    console.log('company', data['minical-company-id']);
-	    update_minical_api_key(data['minical-api-key'], data['minical-company-id']);
-	} 
-
-	if(data['minical-current-url']){
-	    console.log('current_url', data['minical-current-url']);
-
-	    var newURL = data['minical-current-url'];
-	    
-    	newURL = newURL.split('io');
-	    
-	    console.log("URL NEW", newURL);
-	    newURL = '&minical-page='+newURL[1];
-	    
-	    changeurl(newURL, 'minical');
-	}
-},false);
-
 
 function update_minical_api_key(api_key, company_id)
 {
@@ -55,85 +50,16 @@ function update_minical_api_key(api_key, company_id)
 			},
 			dataType:'json',
 			success:function(response){
-				if(response.success){
+				if(response.data.success == true){
+					location.reload();
+			    }else{
+			    	alert(response.data.msg);
 			    }
 			}
 	    });
 }
 
-
-    
-function iframeURLChange(iframe, callback) {
-    var lastDispatched = null;
-
-    var dispatchChange = function () {
-        var newHref = iframe.contentWindow.location.href;
-
-        if (newHref !== lastDispatched) {
-            callback(newHref);
-            lastDispatched = newHref;
-        }
-    };
-
-    var unloadHandler = function () {
-        // Timeout needed because the URL changes immediately after
-        // the `unload` event is dispatched.
-        setTimeout(dispatchChange, 0);
-    };
-
-    function attachUnload() {
-        // Remove the unloadHandler in case it was already attached.
-        // Otherwise, there will be two handlers, which is unnecessary.
-        iframe.contentWindow.removeEventListener("unload", unloadHandler);
-        iframe.contentWindow.addEventListener("unload", unloadHandler);
-    }
-
-    iframe.addEventListener("load", function () {
-        attachUnload();
-
-        // Just in case the change wasn't dispatched during the unload event...
-        dispatchChange();
-    });
-
-    attachUnload();
-}
-
-// Usage:
-
 $(document).ready(function(){
-	// if(document.getElementById("minical-wp-iframe")) {
-	// 	iframeURLChange(document.getElementById("minical-wp-iframe"), function (newURL) {
-	// 	    console.log("URL changed:", newURL);
-
-	// 	    if(newURL.indexOf("localhost") ){
-	// 	    	newURL = newURL.split('public');
-	// 	    }
-	// 	    else {
-	// 	    	newURL = newURL.split('io');
-	// 	    }
-		    
-	// 	    console.log("URL NEW", newURL);
-	// 	    newURL = '&minical-page='+newURL[1];
-		    
-	// 	    changeurl(newURL, 'minical');
-
-	// 	});
-	// }
-
-	$('body').on('click', '.minical_auth', function(){
-		var buttonID = $(this).attr('id');
-		if(buttonID == 'minical_login'){
-			var location = window.location.href;
-			var newURL = '&minical-page=/auth/login';
-		    window.location.href = location + newURL;
-		}
-		else if(buttonID == 'minical_reg'){
-			var location = window.location.href;
-			var newURL = '&minical-page=/auth/register';
-		    window.location.href = location + newURL;
-		}
-	});
-
 
 	// update booking engine fields
 	$('body').on("click", '#save-all-booking-fields-button', function () { 

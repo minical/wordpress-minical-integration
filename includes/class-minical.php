@@ -26,7 +26,7 @@
  * @subpackage Minical/includes
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical {
+class MHBP_Minical {
 
 	/**
 	 * The loader that's responsible for maintaining and registering all hooks that power
@@ -66,8 +66,8 @@ class Minical {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'MHBP_PLUGIN_NAME_VERSION' ) ) {
+			$this->version = MHBP_PLUGIN_NAME_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
@@ -121,7 +121,7 @@ class Minical {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-minical-public.php';
 
-		$this->loader = new Minical_Loader();
+		$this->loader = new MHBP_Minical_Loader();
 
 	}
 
@@ -136,7 +136,7 @@ class Minical {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Minical_i18n();
+		$plugin_i18n = new MHBP_Minical_i18n();
 
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
@@ -151,29 +151,17 @@ class Minical {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Minical_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new MHBP_Minical_Admin( $this->get_plugin_name(), $this->get_version() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );		
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'mhbp_admin_enqueue_styles' );
+		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'mhbp_admin_enqueue_scripts' );		
 		/*hooks made by devloper*/
-		$this->loader->add_action( 'wp_ajax_update_minical_api_key', $plugin_admin, 'update_minical_api_key' );
-		$this->loader->add_action( 'wp_ajax_update_booking_engine_fields', $plugin_admin, 'update_booking_engine_fields' );
-		$this->loader->add_action( 'wp_ajax_update_booking_engine_settings', $plugin_admin, 'update_booking_engine_settings' );
-		// $this->loader->add_action( 'wp_ajax_get_edit_form_data', $plugin_admin, 'get_edit_form_data' );
-		// $this->loader->add_action( 'wp_ajax_delete_form_builder_data', $plugin_admin, 'delete_form_builder_data' );
-		// $this->loader->add_action( 'wp_ajax_set_email_draft', $plugin_admin, 'set_email_draft' );
-		// $this->loader->add_action( 'wp_ajax_get_email_data', $plugin_admin, 'get_email_data' );
-		// $this->loader->add_action( 'wp_ajax_send_regular_email', $plugin_admin, 'send_regular_email' );
-		// $this->loader->add_action( 'wp_ajax_create_campaign', $plugin_admin, 'create_campaign' );
-		// $this->loader->add_action( 'wp_ajax_get_form_data', $plugin_admin, 'get_form_data' );
-		// $this->loader->add_action( 'get_user_form_data', $plugin_admin, 'get_user_form_data' );
-		
-		$this->loader->add_action('admin_menu', $plugin_admin, 'minical_setup_menu');
-
-		//$this->loader->add_action( 'wp_ajax_create_form_list', $plugin_admin, 'create_form_list' );
-		
-		//$this->loader->add_shortcode( 'form-1545398779', $plugin_admin, 'create_shortcode');
-
+		$this->loader->add_action( 'wp_ajax_update_minical_api_key', $plugin_admin, 'mhbp_update_minical_api_key' );
+		$this->loader->add_action( 'wp_ajax_update_booking_engine_fields', $plugin_admin, 'mhbp_update_booking_engine_fields' );
+		$this->loader->add_action( 'wp_ajax_update_booking_engine_settings', $plugin_admin, 'mhbp_update_booking_engine_settings' );
+		$this->loader->add_action( 'wp_ajax_deconfigure_minical', $plugin_admin, 'mhbp_deconfigure_minical' );
+	
+		$this->loader->add_action('admin_menu', $plugin_admin, 'mhbp_minical_setup_menu');
 	}
 
 	/**
@@ -185,18 +173,17 @@ class Minical {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Minical_Public( $this->get_plugin_name(), $this->get_version() );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-		$this->loader->add_action( 'wp_ajax_check_room_type_availability', $plugin_public, 'check_room_type_availability' );
-		$this->loader->add_action( 'wp_ajax_charge_calculation', $plugin_public, 'charge_calculation' );
-		$this->loader->add_action( 'wp_ajax_book_room', $plugin_public, 'book_room' );
-		$this->loader->add_action( 'wp_ajax_get_customer_info_form', $plugin_public, 'get_customer_info_form' );
-		$this->loader->add_action( 'wp_ajax_nopriv_check_room_type_availability', $plugin_public, 'check_room_type_availability' );
-		$this->loader->add_action( 'wp_ajax_nopriv_charge_calculation', $plugin_public, 'charge_calculation' );
-		$this->loader->add_action( 'wp_ajax_nopriv_book_room', $plugin_public, 'book_room' );
-		$this->loader->add_action( 'wp_ajax_nopriv_get_customer_info_form', $plugin_public, 'get_customer_info_form' );
-		// $this->loader->add_action( 'wp_ajax_nopriv_save_form_data', $plugin_public, 'save_form_data' );
+		$plugin_public = new MHBP_Minical_Public( $this->get_plugin_name(), $this->get_version() );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'mhbp_enqueue_styles' );
+		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'mhbp_enqueue_scripts' );
+		$this->loader->add_action( 'wp_ajax_check_room_type_availability', $plugin_public, 'mhbp_check_room_type_availability' );
+		$this->loader->add_action( 'wp_ajax_charge_calculation', $plugin_public, 'mhbp_charge_calculation' );
+		$this->loader->add_action( 'wp_ajax_book_room', $plugin_public, 'mhbp_book_room' );
+		$this->loader->add_action( 'wp_ajax_get_customer_info_form', $plugin_public, 'mhbp_get_customer_info_form' );
+		$this->loader->add_action( 'wp_ajax_nopriv_check_room_type_availability', $plugin_public, 'mhbp_check_room_type_availability' );
+		$this->loader->add_action( 'wp_ajax_nopriv_charge_calculation', $plugin_public, 'mhbp_charge_calculation' );
+		$this->loader->add_action( 'wp_ajax_nopriv_book_room', $plugin_public, 'mhbp_book_room' );
+		$this->loader->add_action( 'wp_ajax_nopriv_get_customer_info_form', $plugin_public, 'mhbp_get_customer_info_form' );
 
 	}
 

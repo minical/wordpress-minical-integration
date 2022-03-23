@@ -1,6 +1,4 @@
 <?php
-
-require_once('partials/minical_account.php');
 /**
  * The public-facing functionality of the plugin.
  *
@@ -20,7 +18,7 @@ require_once('partials/minical_account.php');
  * @subpackage Minical/public
  * @author     Jaydeep Golait <jaydeep.golait@gmail.com>
  */
-class Minical_Public {
+class MHBP_Minical_Public {
 
 	/**
 	 * The ID of this plugin.
@@ -60,7 +58,7 @@ class Minical_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function mhbp_enqueue_styles() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -73,11 +71,9 @@ class Minical_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style( "bootstrap", plugin_dir_url( __FILE__ ) . 'css/bootstrap.min.css', array(), $this->version, 'all' );
 		wp_enqueue_style( "font-awesome-min", plugin_dir_url( __FILE__ ) . 'css/font-awesome.min.css', array(), $this->version, 'all' );
-		wp_enqueue_style( "jquery-ui", plugin_dir_url( __FILE__ ) . 'css/jquery-ui.css', array(), $this->version, 'all' );
+		wp_enqueue_style( "datepicker", plugin_dir_url( __FILE__ ) . 'css/datepicker.css', array(), $this->version, 'all' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/minical-public.css', array(), $this->version, 'all' );
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/datepicker.css', array(), $this->version, 'all' );
     }
 
 	/**
@@ -85,7 +81,7 @@ class Minical_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function mhbp_enqueue_scripts() {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -98,27 +94,27 @@ class Minical_Public {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script( "jquery-1.12", plugin_dir_url( __FILE__ ) . 'js/jquery-1.12.4.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( "bootstrap", plugin_dir_url( __FILE__ ) . 'js/bootstrap.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( "jquery-ui", plugin_dir_url( __FILE__ ) . 'js/jquery-ui.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script('jquery');
+		wp_enqueue_script('jquery-ui-core');
+		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script( "bootbox", plugin_dir_url( __FILE__ ) . 'js/bootbox.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/minical-public.js', array( 'jquery' ), time(), false );
 		?>
 		<script type="text/javascript">
-		    site_url = '<?php echo get_option('siteurl'); ?>';
+		   var site_url = '<?php echo esc_url(get_option('siteurl')); ?>';
 		</script>
 	<?php }
 
-	function check_room_type_availability(){
-		$check_in_date = $_POST['start_date'];
-        $check_out_date = $_POST['end_date'];
-        $adult_count = $_POST['adult_count'];
-        $children_count = $_POST['children_count'];
-        $company_id = $_POST['company_id'];
-        $api_key = $_POST['api_key'];
-        $is_ajax_wp = $_POST['is_ajax_wp'];
+	function mhbp_check_room_type_availability(){
+		$check_in_date = sanitize_option( 'start_date', $_POST['start_date'] );
+        $check_out_date = sanitize_option( 'end_date', $_POST['end_date'] ); 
+        $adult_count = intval( $_POST['adult_count'] );
+        $children_count = intval( $_POST['children_count'] );
+        $company_id = intval( $_POST['company_id'] );
+        $api_key = sanitize_key( $_POST['api_key'] );
+        $is_ajax_wp = sanitize_option('is_ajax_wp', $_POST['is_ajax_wp'] );
 
-        $baseUrl = MINICAL_API_URL;
+        $baseUrl = MHBP_MINICAL_API_URL;
         $xApiKey = $api_key;  
         $data = array(
         	'company_id' => $company_id,
@@ -130,7 +126,7 @@ class Minical_Public {
         );
 
         $output = wp_remote_post(
-			$baseUrl.'/booking/check_room_type_availability',
+			esc_url_raw( $baseUrl.'/booking/check_room_type_availability' ),
 			array(
 				'sslverify' => FALSE,
 				'method' => 'POST',
@@ -148,26 +144,26 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        // echo '<pre>'; print_r($result); echo '</pre>'; die;
+        
 		$resp = json_decode($result['body'], true);
 
-        echo json_encode(array('result' => $resp), true);
+        echo wp_json_encode(array('result' => $resp), true);
         die;
 	}
 
-	function charge_calculation(){
-		$view_data['data'] = $_POST['view_data'];
-		$view_data['rate_plan_id'] = $_POST['rate_plan_id'];
+	function mhbp_charge_calculation(){
+		$view_data['data'] = sanitize_option( 'view_data', $_POST['view_data'] );
+		$view_data['rate_plan_id'] = intval( $_POST['rate_plan_id'] );
 
-		$company_id = $_POST['company_id'];
-        $api_key = $_POST['api_key'];
+		$company_id = intval( $_POST['company_id'] );
+        $api_key = sanitize_key( $_POST['api_key'] );
 		$view_data['company_id'] = $company_id;
 
-		$baseUrl = MINICAL_API_URL; 
+		$baseUrl = MHBP_MINICAL_API_URL; 
         $xApiKey = $api_key;
 
         $output = wp_remote_post(
-			$baseUrl.'/booking/booking_engine_charge_calculation',
+			esc_url_raw( $baseUrl.'/booking/booking_engine_charge_calculation' ),
 			array(
 				'sslverify' => FALSE,
 				'method' => 'POST',
@@ -185,26 +181,28 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        // echo '<pre>'; print_r($result); echo '</pre>'; die;
+        
 		$resp = json_decode($result['body'], true);
 
-        echo json_encode(array('result' => $resp), true);
+        echo wp_json_encode(array('result' => $resp), true);
         die;
 	}
 
-	function book_room(){
-		$data['form_data'] = $_POST['form_data'];
-		$data['rate_plan_id'] = $_POST['rate_plan_id'];
-		$data['view_data'] = $_POST['view_data'];
-		$data['company_data'] = $_POST['company_data'];
-		$data['average_daily_rate'] = $_POST['average_daily_rate'];
+	function mhbp_book_room(){
+		$data['form_data'] = sanitize_option( 'form_data', $_POST['form_data'] );
+		$data['rate_plan_id'] = intval( $_POST['rate_plan_id'] );
+		$data['view_data'] = sanitize_option( 'view_data', $_POST['view_data'] );
+		$data['company_data'] = sanitize_option( 'company_data', $_POST['company_data'] );
+		$data['average_daily_rate'] = sanitize_option( 'average_daily_rate', $_POST['average_daily_rate'] );
 
-		$company_id = $_POST['company_id'];
-        $api_key = $_POST['api_key'];
+		$data['public_url'] = MHBP_MINICAL_APP_URL;
+
+		$company_id = intval( $_POST['company_id'] );
+        $api_key = sanitize_key( $_POST['api_key'] );
 
         $data['company_id'] = $company_id;
 
-		$get_booking_engine_settings = get_option('booking_engine_settings_'.$company_id);
+		$get_booking_engine_settings = sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.$company_id) );
     	$get_booking_engine_settings = json_decode($get_booking_engine_settings, true);
 
     	if(isset($get_booking_engine_settings['email_confirmation_for_booking_engine']) && $get_booking_engine_settings['email_confirmation_for_booking_engine']){
@@ -219,11 +217,11 @@ class Minical_Public {
     		$data['booking_engine_booking_status'] = false;
     	}
 
-		$baseUrl = MINICAL_API_URL;  
+		$baseUrl = MHBP_MINICAL_API_URL;  
         $xApiKey = $api_key;
 
         $output = wp_remote_post(
-			$baseUrl.'/booking/create_booking',
+			esc_url_raw( $baseUrl.'/booking/create_booking' ),
 			array(
 				'sslverify' => FALSE,
 				'method' => 'POST',
@@ -241,23 +239,23 @@ class Minical_Public {
 		);
 
         $result = json_decode(json_encode($output), true);
-        // echo '<pre>'; print_r($result); echo '</pre>'; die;
+        
 		$resp = json_decode($result['body'], true);
 
-        echo json_encode(array('result' => $resp), true);
+        echo wp_json_encode(array('result' => $resp), true);
         die;
 	}
 
-	function get_customer_info_form(){
+	function mhbp_get_customer_info_form(){
 
-		$company_id = $_POST['company_id'];
-        $api_key = $_POST['api_key'];
+		$company_id = intval( $_POST['company_id'] );
+        $api_key = sanitize_key( $_POST['api_key'] );
 		$data['company_id'] = $company_id;
 
-        $get_booking_engine_fields = get_option('booking_engine_fields_'.$company_id);
+        $get_booking_engine_fields = sanitize_option( 'booking_engine_fields_', get_option('booking_engine_fields_'.$company_id) );
         $get_booking_engine_fields = json_decode($get_booking_engine_fields, true);
 
-        $common_booking_engine_fields = json_decode(COMMON_BOOKING_ENGINE_FIELDS, true);
+        $common_booking_engine_fields = json_decode(MHBP_COMMON_BOOKING_ENGINE_FIELDS, true);
         $get_common_booking_engine_fields = $get_booking_engine_fields;
 
         $booking_engine_fields = array();
@@ -265,11 +263,11 @@ class Minical_Public {
         foreach($common_booking_engine_fields as $id => $name)
         {
             $is_required = 1;
-            if ($id == BOOKING_FIELD_NAME) {
+            if ($id == MHBP_BOOKING_FIELD_NAME) {
                 $is_required = 1;
             } else if ($get_common_booking_engine_fields && isset($get_common_booking_engine_fields[$id]) && isset($get_common_booking_engine_fields[$id]['is_required'])) {
                 $is_required = $get_common_booking_engine_fields[$id]['is_required'];
-            } else if ($id == BOOKING_FIELD_POSTAL_CODE || $id == BOOKING_FIELD_SPECIAL_REQUEST) {
+            } else if ($id == MHBP_BOOKING_FIELD_POSTAL_CODE || $id == MHBP_BOOKING_FIELD_SPECIAL_REQUEST) {
                 $is_required = 0;
             }
 
@@ -277,7 +275,7 @@ class Minical_Public {
                 'id' => $id,
                 'field_name' => $name,
                 'company_id' => $company_id,
-                'show_on_booking_form'=> ($id == BOOKING_FIELD_NAME) ? 1 : (($get_common_booking_engine_fields && isset($get_common_booking_engine_fields[$id]) && isset($get_common_booking_engine_fields[$id]['show_on_booking_form'])) ? $get_common_booking_engine_fields[$id]['show_on_booking_form'] : 1),
+                'show_on_booking_form'=> ($id == MHBP_BOOKING_FIELD_NAME) ? 1 : (($get_common_booking_engine_fields && isset($get_common_booking_engine_fields[$id]) && isset($get_common_booking_engine_fields[$id]['show_on_booking_form'])) ? $get_common_booking_engine_fields[$id]['show_on_booking_form'] : 1),
                 'is_required' => $is_required
             );
         }
@@ -286,39 +284,39 @@ class Minical_Public {
         {
             foreach ($booking_engine_fields as $key => $value) 
             {
-                if($value['id'] == BOOKING_FIELD_NAME){
+                if($value['id'] == MHBP_BOOKING_FIELD_NAME){
                     $name = 'customer_name';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_EMAIL){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_EMAIL){
                     $name = 'email';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_PHONE){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_PHONE){
                     $name = 'phone';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_ADDRESS){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_ADDRESS){
                     $name = 'address';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_CITY){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_CITY){
                     $name = 'city';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_REGION){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_REGION){
                     $name = 'region';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_COUNTRY){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_COUNTRY){
                     $name = 'country';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_POSTAL_CODE){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_POSTAL_CODE){
                     $name = 'postal_code';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
-                } else if($value['id'] == BOOKING_FIELD_SPECIAL_REQUEST){
+                } else if($value['id'] == MHBP_BOOKING_FIELD_SPECIAL_REQUEST){
                     $name = 'special_requests';
                     $is_required = $value['is_required'] ? 'required' : '';
                     $show = $value['show_on_booking_form'] ? '' : 'hidden';
@@ -333,9 +331,9 @@ class Minical_Public {
                     $is_required_span = '';
                 }
 
-                $data_error = 'Please enter your '.strtolower($field_name);
+                $data_error = esc_html( 'Please enter your '.strtolower($field_name) );
                 
-                if($value['id'] == BOOKING_FIELD_SPECIAL_REQUEST){ 
+                if($value['id'] == MHBP_BOOKING_FIELD_SPECIAL_REQUEST){ 
 
                     $booking_form .= '<div class="form-group '. $show .'">
                                     <label for="customer-name" class="col-sm-3 control-label">'. $field_name . ' ' . $is_required_span . '
@@ -370,7 +368,7 @@ class Minical_Public {
                 } 
             } 
 
-            $get_booking_engine_settings = get_option('booking_engine_settings_'.$company_id);
+            $get_booking_engine_settings = sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.$company_id) );
         	$get_booking_engine_settings = json_decode($get_booking_engine_settings, true);
 
         	if(isset($get_booking_engine_settings['store_cc_in_booking_engine']) && $get_booking_engine_settings['store_cc_in_booking_engine']){
@@ -440,7 +438,7 @@ class Minical_Public {
         $result['store_cc_in_booking_engine'] = isset($get_booking_engine_settings['store_cc_in_booking_engine']) && $get_booking_engine_settings['store_cc_in_booking_engine'] ? 1 : 0;
         $result['status'] = true;
 
-        echo json_encode(array('result' => $result), true);
+        echo wp_json_encode(array('result' => $result), true);
         die;
 	}
 }
