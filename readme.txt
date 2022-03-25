@@ -50,25 +50,26 @@ So if you’re ready to automate booking on your (or your client’s) website, M
 * After that Install and activate our plugin.
 
 == Screenshots ==
+Screenshots are stored in assets folder.
  
-1. Minical plugin home page [1.png].
-2. Minical booking calendar [2.png].
-3. Booking engine settings page [3.png].
-4. Online booking engine fields [4.png].
-5. Booking settings page [5.png].
-6. Rate plan settings page [6.png].
-7. Edit minical rates [7.png].
-8. The property general information settings [8.png].
-9. The room settnigs [9.png].
-10. The room type settings page [10.png].
-11. Room type edit section [11.png].
-12. The frontend widget view page [12.png].
-13. Connect minical property page [13.png].
+1. Minical plugin home page [assets/1.png].
+2. Minical booking calendar [assets/2.png].
+3. Booking engine settings page [assets/3.png].
+4. Online booking engine fields [assets/4.png].
+5. Booking settings page [assets/5.png].
+6. Rate plan settings page [assets/6.png].
+7. Edit minical rates [assets/7.png].
+8. The property general information settings [assets/8.png].
+9. The room settnigs [assets/9.png].
+10. The room type settings page [assets/10.png].
+11. Room type edit section [assets/11.png].
+12. The frontend widget view page [assets/12.png].
+13. Connect minical property page [assets/13.png].
 
 == Changelog ==
 
-= 1.0.01 =
-* First version published
+= 1.0.1 =
+* Initial version
 
 == Upgrade notice ==
 -
