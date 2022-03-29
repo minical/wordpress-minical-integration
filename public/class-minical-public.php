@@ -106,13 +106,13 @@ class MHBP_Minical_Public {
 	<?php }
 
 	function mhbp_check_room_type_availability(){
-		$check_in_date = sanitize_option( 'start_date', $_POST['start_date'] );
-        $check_out_date = sanitize_option( 'end_date', $_POST['end_date'] ); 
+		$check_in_date = sanitize_text_field( $_POST['start_date'] );
+        $check_out_date = sanitize_text_field( $_POST['end_date'] ); 
         $adult_count = intval( $_POST['adult_count'] );
         $children_count = intval( $_POST['children_count'] );
         $company_id = intval( $_POST['company_id'] );
         $api_key = sanitize_key( $_POST['api_key'] );
-        $is_ajax_wp = sanitize_option('is_ajax_wp', $_POST['is_ajax_wp'] );
+        $is_ajax_wp = sanitize_text_field( $_POST['is_ajax_wp'] );
 
         $baseUrl = MHBP_MINICAL_API_URL;
         $xApiKey = $api_key;  
@@ -152,7 +152,7 @@ class MHBP_Minical_Public {
 	}
 
 	function mhbp_charge_calculation(){
-		$view_data['data'] = sanitize_option( 'view_data', $_POST['view_data'] );
+		$view_data['data'] =  sanitize_post( $_POST['view_data'] );
 		$view_data['rate_plan_id'] = intval( $_POST['rate_plan_id'] );
 
 		$company_id = intval( $_POST['company_id'] );
@@ -189,20 +189,21 @@ class MHBP_Minical_Public {
 	}
 
 	function mhbp_book_room(){
-		$data['form_data'] = sanitize_option( 'form_data', $_POST['form_data'] );
+		$data['form_data'] =  sanitize_post( $_POST['form_data'] );
 		$data['rate_plan_id'] = intval( $_POST['rate_plan_id'] );
-		$data['view_data'] = sanitize_option( 'view_data', $_POST['view_data'] );
-		$data['company_data'] = sanitize_option( 'company_data', $_POST['company_data'] );
-		$data['average_daily_rate'] = sanitize_option( 'average_daily_rate', $_POST['average_daily_rate'] );
-
+		$data['view_data'] =  sanitize_post( $_POST['view_data'] );
+		$data['company_data'] =  sanitize_post( $_POST['company_data'] );
+		$data['average_daily_rate'] = sanitize_text_field( $_POST['average_daily_rate'] );
+        
 		$data['public_url'] = MHBP_MINICAL_APP_URL;
-
+       
 		$company_id = intval( $_POST['company_id'] );
         $api_key = sanitize_key( $_POST['api_key'] );
 
         $data['company_id'] = $company_id;
 
 		$get_booking_engine_settings = sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.$company_id) );
+
     	$get_booking_engine_settings = json_decode($get_booking_engine_settings, true);
 
     	if(isset($get_booking_engine_settings['email_confirmation_for_booking_engine']) && $get_booking_engine_settings['email_confirmation_for_booking_engine']){
@@ -237,7 +238,6 @@ class MHBP_Minical_Public {
 				'body' => json_encode($data),
 			)
 		);
-
         $result = json_decode(json_encode($output), true);
         
 		$resp = json_decode($result['body'], true);

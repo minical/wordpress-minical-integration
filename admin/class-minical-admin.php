@@ -217,22 +217,22 @@ class MHBP_Minical_Admin {
 
 	function mhbp_update_booking_engine_fields(){
 
-		$updated_booking_engine_fields = sanitize_option( 'updated_booking_engine_fields', $_POST['updated_booking_engine_fields'] );
+		$updated_booking_engine_fields = sanitize_post($_POST['updated_booking_engine_fields']);
 		
 		$common_booking_engine_fields = json_decode(MHBP_COMMON_BOOKING_ENGINE_FIELDS, true);
 
 		$fields_data = array();
 		foreach($updated_booking_engine_fields as $updated_booking_field)
         {
-            $booking_engine_field_id = $updated_booking_field['id'];
+            $booking_engine_field_id = sanitize_text_field( $updated_booking_field['id'] );
             
             if(isset($common_booking_engine_fields[$booking_engine_field_id]))
             {
                 $fields_data[$booking_engine_field_id] = array(
                     'id' => $booking_engine_field_id,
                     'company_id' => MHBP_COMPANY_ID,
-                    'show_on_booking_form' => $updated_booking_field['show_on_booking_form'],
-                    'is_required' => $updated_booking_field['is_required']
+                    'show_on_booking_form' => sanitize_text_field( $updated_booking_field['show_on_booking_form'] ),
+                    'is_required' => sanitize_text_field( $updated_booking_field['is_required'] )
                 );
             }
         }
@@ -241,7 +241,8 @@ class MHBP_Minical_Admin {
 
         update_option('booking_engine_fields_'.MHBP_COMPANY_ID, $fields_data);
 
-        $booking_engine_fields = sanitize_option( 'booking_engine_fields_', get_option('booking_engine_fields_'.MHBP_COMPANY_ID) );
+        $booking_engine_fields =  sanitize_option( 'booking_engine_fields_', get_option('booking_engine_fields_'.MHBP_COMPANY_ID) );
+        
         $booking_engine_fields = json_decode($booking_engine_fields, true);
 
         $result = array('success' => true, 'result' => $booking_engine_fields);
@@ -250,18 +251,18 @@ class MHBP_Minical_Admin {
 
 	function mhbp_update_booking_engine_settings(){
 		$company_data = array(
-            'allow_same_day_check_in'               => sanitize_option( 'allow_same_day_check_in', $_POST['allow_same_day_check_in'] ),
-            'store_cc_in_booking_engine'            => sanitize_option( 'store_cc_in_booking_engine', $_POST['store_cc_in_booking_engine'] ),
-            'booking_engine_booking_status'         => sanitize_option( 'booking_engine_booking_status', $_POST['booking_engine_booking_status'] ),
-            'email_confirmation_for_booking_engine' => sanitize_option( 'email_confirmation_for_booking_engine', $_POST['email_confirmation_for_booking_engine'] ),
-            'booking_engine_tracking_code'          => htmlentities($_POST['booking_engine_tracking_code'])
+            'allow_same_day_check_in'               => sanitize_text_field( $_POST['allow_same_day_check_in'] ),
+            'store_cc_in_booking_engine'            => sanitize_text_field( $_POST['store_cc_in_booking_engine'] ),
+            'booking_engine_booking_status'         => sanitize_text_field( $_POST['booking_engine_booking_status'] ),
+            'email_confirmation_for_booking_engine' => sanitize_text_field( $_POST['email_confirmation_for_booking_engine'] ),
+            'booking_engine_tracking_code'          => sanitize_textarea_field( htmlentities($_POST['booking_engine_tracking_code']) )
         );
-
         $setting_data = json_encode($company_data);
 
         update_option('booking_engine_settings_'.MHBP_COMPANY_ID, $setting_data);
 
-        $booking_engine_settings = sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.MHBP_COMPANY_ID) );
+        $booking_engine_settings =  sanitize_option( 'booking_engine_settings_', get_option('booking_engine_settings_'.MHBP_COMPANY_ID) );
+
         $booking_engine_settings = json_decode($booking_engine_settings, true);
 
         $result = array('success' => true, 'result' => $booking_engine_settings);
