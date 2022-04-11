@@ -1,4 +1,4 @@
-== minical-hotel-booking-plugin ==
+== Minical Hotel Booking Plugin ==
 Plugin URI:        https://minical.io
 Plugin Name:       Minical
 Contributors: Pankaj

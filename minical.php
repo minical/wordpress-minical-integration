@@ -16,7 +16,7 @@
  * Plugin URI:        https://minical.io
  * Description:       Minical is an opensource Property Management System (PMS) and Online Booking System for hotels.
  * Version:           1.0.1
- * Author:            Mradul Jain
+ * Author:            Pankaj
  * Author URI:        https://minical.io
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
