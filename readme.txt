@@ -52,19 +52,19 @@ So if you’re ready to automate booking on your (or your client’s) website, M
 == Screenshots ==
 Screenshots are stored in assets folder.
  
-1. Minical plugin home page [assets/1.png].
-2. Minical booking calendar [assets/2.png].
-3. Booking engine settings page [assets/3.png].
-4. Online booking engine fields [assets/4.png].
-5. Booking settings page [assets/5.png].
-6. Rate plan settings page [assets/6.png].
-7. Edit minical rates [assets/7.png].
-8. The property general information settings [assets/8.png].
-9. The room settnigs [assets/9.png].
-10. The room type settings page [assets/10.png].
-11. Room type edit section [assets/11.png].
-12. The frontend widget view page [assets/12.png].
-13. Connect minical property page [assets/13.png].
+1. Minical plugin home page [assets/screenshot-1.png].
+2. Minical booking calendar [assets/screenshot-2.png].
+3. Booking engine settings page [assets/screenshot-3.png].
+4. Online booking engine fields [assets/screenshot-4.png].
+5. Booking settings page [assets/screenshot-5.png].
+6. Rate plan settings page [assets/screenshot-6.png].
+7. Edit minical rates [assets/screenshot-7.png].
+8. The property general information settings [assets/screenshot-8.png].
+9. The room settnigs [assets/screenshot-9.png].
+10. The room type settings page [assets/screenshot-10.png].
+11. Room type edit section [assets/screenshot-11.png].
+12. The frontend widget view page [assets/screenshot-12.png].
+13. Connect minical property page [assets/screenshot-13.png].
 
 == Changelog ==
 
