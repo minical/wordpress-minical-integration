@@ -94,7 +94,7 @@ function check_room_type_availability()
 	var adult_count = $('select[name="adult_count"]').val();    
 	var children_count = $('select[name="children_count"]').val();
 	var company_id = $('#minical-select-dates-rooms').data('company_id');
-	var api_key = $('#minical-select-dates-rooms').data('api_key');
+	//var api_key = $('#minical-select-dates-rooms').data('api_key');
 
 	var validate = true;
 
@@ -123,7 +123,7 @@ function check_room_type_availability()
 					adult_count : adult_count,
 					children_count : children_count,
 					company_id : company_id,
-					api_key : api_key,
+					//api_key : api_key,
 					is_ajax_wp : true
 				},
 			dataType:'json',
@@ -322,7 +322,7 @@ $(document).on('click', '.book_reservation', function (event) {
     var daily_rate_content = '';
 
     var company_id = $('#minical-select-dates-rooms').data('company_id');
-	var api_key = $('#minical-select-dates-rooms').data('api_key');
+	// var api_key = $('#minical-select-dates-rooms').data('api_key');
 
     average_daily_rate = 0;
 
@@ -401,7 +401,7 @@ $(document).on('click', '.book_reservation', function (event) {
 				action: 'charge_calculation',
 				view_data: data,
 				company_id: company_id,
-				api_key: api_key,
+				// api_key: api_key,
 				rate_plan_id: selected_rate_plan_id
 			},
 		dataType:'json',
@@ -450,7 +450,7 @@ $(document).on('click', '.book_reservation', function (event) {
 		data:{
 				action: 'get_customer_info_form',
 				company_id: company_id,
-				api_key: api_key,
+				// api_key: api_key,
 			},
 		dataType:'json',
 		success:function(fields){
@@ -494,7 +494,7 @@ $(document).on('click', '.book_reservation', function (event) {
 $(document).on('click', '#book_room', function (event) {
 
 	var company_id = $('#minical-select-dates-rooms').data('company_id');
-	var api_key = $('#minical-select-dates-rooms').data('api_key');
+	// var api_key = $('#minical-select-dates-rooms').data('api_key');
 
 	var el = $('#guest-information-form').find('.form-group').find('input');
 	var validate = '';
@@ -573,7 +573,7 @@ $(document).on('click', '#book_room', function (event) {
 					company_data: company_data,
 					average_daily_rate: average_daily_rate,
 					company_id: company_id,
-					api_key: api_key
+					// api_key: api_key
 				},
 			dataType:'json',
 			success:function(response){

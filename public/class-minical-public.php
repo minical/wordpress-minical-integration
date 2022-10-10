@@ -111,7 +111,10 @@ class MHBP_Minical_Public {
         $adult_count = intval( $_POST['adult_count'] );
         $children_count = intval( $_POST['children_count'] );
         $company_id = intval( $_POST['company_id'] );
-        $api_key = sanitize_key( $_POST['api_key'] );
+        //$api_key = sanitize_key( $_POST['api_key'] );
+
+        $api_key = sanitize_option( 'minical_api_key', get_option('minical_api_key') );
+
         $is_ajax_wp = sanitize_text_field( $_POST['is_ajax_wp'] );
 
         $baseUrl = MHBP_MINICAL_API_URL;
@@ -156,7 +159,8 @@ class MHBP_Minical_Public {
 		$view_data['rate_plan_id'] = intval( $_POST['rate_plan_id'] );
 
 		$company_id = intval( $_POST['company_id'] );
-        $api_key = sanitize_key( $_POST['api_key'] );
+        //$api_key = sanitize_key( $_POST['api_key'] );
+        $api_key = sanitize_option( 'minical_api_key', get_option('minical_api_key') );
 		$view_data['company_id'] = $company_id;
 
 		$baseUrl = MHBP_MINICAL_API_URL; 
@@ -198,7 +202,8 @@ class MHBP_Minical_Public {
 		$data['public_url'] = MHBP_MINICAL_APP_URL;
        
 		$company_id = intval( $_POST['company_id'] );
-        $api_key = sanitize_key( $_POST['api_key'] );
+        //$api_key = sanitize_key( $_POST['api_key'] );
+        $api_key = sanitize_option( 'minical_api_key', get_option('minical_api_key') );
 
         $data['company_id'] = $company_id;
 
@@ -249,7 +254,8 @@ class MHBP_Minical_Public {
 	function mhbp_get_customer_info_form(){
 
 		$company_id = intval( $_POST['company_id'] );
-        $api_key = sanitize_key( $_POST['api_key'] );
+        //$api_key = sanitize_key( $_POST['api_key'] );
+        $api_key = sanitize_option( 'minical_api_key', get_option('minical_api_key') );
 		$data['company_id'] = $company_id;
 
         $get_booking_engine_fields = sanitize_option( 'booking_engine_fields_', get_option('booking_engine_fields_'.$company_id) );

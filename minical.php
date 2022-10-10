@@ -15,7 +15,7 @@
  * Plugin Name:       Minical
  * Plugin URI:        https://minical.io
  * Description:       Minical is an opensource Property Management System (PMS) and Online Booking System for hotels.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Minical
  * Author URI:        https://minical.io
  * License:           GPL-2.0+
@@ -42,7 +42,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'MHBP_PLUGIN_NAME_VERSION', '1.0.1' );
+define( 'MHBP_PLUGIN_NAME_VERSION', '1.0.2' );
 define( 'MHBP_STE_PLUGIN_DB_VERSION', '12' );
  
 // define( 'MHBP_MINICAL_API_URL', 'https://demoapi.minical.io/v2' );
@@ -268,7 +268,7 @@ function mhbp_minical_online_booking_engine( $atts ) {
 		    }
 			</style>';
 	
-	$html .= '<div id="minical-select-dates-rooms" class="column small-12 medium-8" data-company_id="'.$atts['id'].'" data-api_key="'.$atts['key'].'"><form action="" method="post" target="_blank" id="booking-form">
+	$html .= '<div id="minical-select-dates-rooms" class="column small-12 medium-8" data-company_id="'.$atts['id'].'"><form action="" method="post" target="_blank" id="booking-form">
 	<ul>
 		<li>
 			<label for="check-in-date" >Check-in Date</label>

@@ -7,7 +7,7 @@ Tags: Booking, booking system, booking plugin, appointment booking, appointment 
 Requires at least: 5.0
 Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -35,7 +35,7 @@ So if you’re ready to automate booking on your (or your client’s) website, M
 
 
 == Version:==           
- 1.0.1
+ 1.0.2
 
 == View our plugin Demo pages:== 
 
@@ -68,7 +68,7 @@ Screenshots are stored in assets folder.
 
 == Changelog ==
 
-= 1.0.1 =
+= 1.0.2 =
 * Initial version
 
 == Upgrade notice ==
